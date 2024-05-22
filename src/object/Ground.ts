@@ -6,8 +6,9 @@ export class Ground {
     x: number
     y: number
     image: HTMLImageElement
+    speed : number
 
-    constructor(ctx: any, width: number, height: number, scaleRatio: number) {
+    constructor(ctx: any, width: number, height: number, scaleRatio: number, speed : number) {
         this.ctx = ctx
         this.width = width
         this.height = height
@@ -18,10 +19,11 @@ export class Ground {
 
         this.image = new Image()
         this.image.src = './assets/images/ground.png'
+        this.speed = speed
     }
 
     update(gameSpeed: number, frameTimeDelta: number) {
-        this.x -= 5
+        this.x -= gameSpeed * frameTimeDelta * this.speed * this.scaleRatio; 
     }
 
     render() {

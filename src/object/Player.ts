@@ -1,5 +1,3 @@
-import { eventManager } from 'react-toastify/dist/core'
-
 export class Player {
     ctx: any
     width: number
@@ -75,29 +73,34 @@ export class Player {
         this.jumpPressed = true
     }
 
-    update() {
-        this.run()
+    update(gameSpeed : number, frameTimeDelta : number) {
+        this.run(gameSpeed, frameTimeDelta)
 
         if (this.jumpInProgress) {
             this.image = this.standingStillImage;
         }
 
-        this.jump()
+        this.jump(frameTimeDelta)
     }
 
     render() {
         this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
     }
 
-    run() {
-        if (this.image === this.dinoRun1_Image) {
-            this.image = this.dinoRun2_Image
-        } else {
-            this.image = this.dinoRun1_Image
+    run(gameSpeed: number, frameTimeDelta : number) {
+
+        if(this.walkAnimationTimer <= 0){
+            if (this.image === this.dinoRun1_Image) {
+                this.image = this.dinoRun2_Image
+            } else {
+                this.image = this.dinoRun1_Image
+            }
+            this.walkAnimationTimer = 200;
         }
+        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
     }
 
-    jump() {
+    jump(frameTimeDelta : number) {
         if (this.jumpPressed) {
             this.jumpInProgress = true
         }
@@ -109,13 +112,13 @@ export class Player {
                 this.y > this.canvas.height - this.minJumpHeight ||
                 (this.y > this.canvas.height - this.maxJumpHeight && this.jumpPressed)
             ) {
-                this.y -= this.JUMP_SPEED * this.scaleRatio * 5
+                this.y -= this.JUMP_SPEED * this.scaleRatio * frameTimeDelta
             } else {
                 this.falling = true
             }
         } else {
             if (this.y < this.yStandingPosition) {
-                this.y += this.GRAVITY * this.scaleRatio * 5
+                this.y += this.GRAVITY * this.scaleRatio * frameTimeDelta
                 if (this.y + this.height > this.canvas.height) {
                     this.y = this.yStandingPosition
                 }
@@ -130,11 +133,3 @@ export class Player {
     duck() {}
 }
 
-/*  
-    while(is_running){
-        input
-        update
-        render
-    }
-
-*/

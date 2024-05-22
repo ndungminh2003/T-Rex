@@ -5,11 +5,12 @@ export class Cactus {
   scaleRatio: number
   x: number
   y: number
+  speed : number
 
   cactusImage: HTMLImageElement
   image: HTMLImageElement
 
-  constructor(ctx: any, width: number, height: number, scaleRatio: number){
+  constructor(ctx: any, width: number, height: number, scaleRatio: number, speed : number){
     this.ctx = ctx;
     this.width = width;
     this.height = height;
@@ -21,11 +22,12 @@ export class Cactus {
     this.cactusImage = new Image()
     this.cactusImage.src = './assets/images/cactus_1.png'
     this.image = this.cactusImage
+    this.speed = speed
 
   }
 
-  update(){
-    this.x -= 5 
+  update(gameSpeed : number, frameTimeDelta : number){
+    this.x -= gameSpeed * frameTimeDelta * this.speed * this.scaleRatio
   }
 
   render() {

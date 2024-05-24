@@ -1,123 +1,67 @@
 import { Player } from '../object/Player'
 import { Ground } from '../object/Ground'
 import { Cactus } from '../object/Cactus'
+import { Score } from '../object/Score'
+import { Bird } from '../object/Bird'
+import { loadMap, clearScreen, getScaleRatio } from '../utilities/Utilities'
+
+var Sprite = {
+    player: Player,
+    ground: Ground,
+    cactus: Cactus,
+    bird: Bird,
+    score: Score,
+}
 
 export class GameScene {
-    constructor() {
+    sprite: any
+    gameConfig: any
+    ctx: any
+    gameSpeed: number
+    groundAndCactusSpeed: number
+    previousTime: any
+
+    constructor(gameConfig: any) {
         const canvas = document.getElementById('game') as HTMLCanvasElement
         const ctx = canvas.getContext('2d')
+        this.ctx = ctx
+        this.gameConfig = gameConfig
+        this.sprite = Sprite
 
-        const GAME_WIDTH = 800
-        const GAME_HEIGHT = 200
-        const PLAYER_WIDTH = 88 / 1.5
-        const PLAYER_HEIGHT = 94 / 1.5
-        const MAX_JUMP_HEIGHT = GAME_HEIGHT
-        const MIN_JUMP_HEIGHT = 150
+        this.gameSpeed = 1
+        this.groundAndCactusSpeed = 0.5
 
-        const GROUND_WIDTH = 2400
-        const GROUND_HEIGHT = 24
+        this.initGame()
 
-        const CACTUS_WIDTH = 45
-        const CACTUS_HEIGHT = 30
-
-        let GAME_SPEED = 1
-        const GAME_SPEED_INCREMENT = 0.00001
-        const GROUND_AND_CACTUS_SPEED = 0.5
-
-        let scaleRatio: number | null = null
-        let player: Player | null = null
-        let previousTime: number | null = null
-        let ground: Ground | null = null
-        let cactus: Cactus | null = null
-
-        function setScreen() {
-            scaleRatio = getScaleRatio()
-            canvas.width = GAME_WIDTH * scaleRatio
-            canvas.height = GAME_HEIGHT * scaleRatio
-            createSprites()
-        }
-
-        function createSprites() {
-            const playerWidthInGame = scaleRatio ? PLAYER_WIDTH * scaleRatio : 0
-            const playerHeightInGame = scaleRatio ? PLAYER_HEIGHT * scaleRatio : 0
-            const minJumpHeightInGame = scaleRatio ? MIN_JUMP_HEIGHT * scaleRatio : 0
-            const maxJumpHeightInGame = scaleRatio ? MAX_JUMP_HEIGHT * scaleRatio : 0
-            const scaleRatioInGame = scaleRatio ? scaleRatio : 0
-
-            const groundWidthInGame = scaleRatio ? GROUND_WIDTH * scaleRatio : 0
-            const groundHeightInGame = scaleRatio ? GROUND_HEIGHT * scaleRatio : 0
-
-            const cactusWidthInGame = scaleRatio ? CACTUS_WIDTH * scaleRatio : 0
-            const cactusHeightInGame = scaleRatio ? CACTUS_HEIGHT * scaleRatio : 0
-
-            player = new Player(
-                canvas,
-                ctx,
-                playerWidthInGame,
-                playerHeightInGame,
-                scaleRatioInGame,
-                maxJumpHeightInGame,
-                minJumpHeightInGame
-            )
-
-            ground = new Ground(ctx, groundWidthInGame, groundHeightInGame, scaleRatioInGame, GROUND_AND_CACTUS_SPEED)
-
-            cactus = new Cactus(ctx, cactusWidthInGame, cactusHeightInGame, scaleRatioInGame, GROUND_AND_CACTUS_SPEED)
-        }
-
-        function getScaleRatio() {
-            const screenHeight = Math.min(window.innerHeight, document.documentElement.clientHeight)
-
-            const screenWidth = Math.min(window.innerWidth, document.documentElement.clientWidth)
-
-            if (screenWidth / screenHeight < GAME_WIDTH / GAME_HEIGHT) {
-                return screenWidth / GAME_WIDTH
-            } else {
-                return screenHeight / GAME_HEIGHT
-            }
-        }
-
-        setScreen()
-
-        function updateGameSpeed(frameTimeDelta : number){
-            GAME_SPEED += frameTimeDelta * GAME_SPEED_INCREMENT
-        }
-
-        function clearScreen() {
-            if (ctx) {
-                ctx.fillStyle = 'white'
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-            }
-        }
-
-        function gameLoop(currentTime: number | null) {
-            if (previousTime === null) {
-                previousTime = currentTime
+        const gameLoop = (currentTime: number | null) => {
+            if (this.previousTime === null) {
+                this.previousTime = currentTime
                 requestAnimationFrame(gameLoop)
                 return
             }
             let frameTimeDelta = null
             if (currentTime) {
-                frameTimeDelta = currentTime - previousTime
+                frameTimeDelta = currentTime - this.previousTime
             }
 
-            previousTime = currentTime
-            clearScreen()
+            this.previousTime = currentTime
+            clearScreen(this.ctx)
 
-            if (player && ground && cactus && frameTimeDelta) {
-                player.update(GAME_SPEED, frameTimeDelta)
-                ground.update(GROUND_AND_CACTUS_SPEED, frameTimeDelta)
-                cactus.update(GROUND_AND_CACTUS_SPEED, frameTimeDelta)
+            if (frameTimeDelta) {
+                this.updateGame(frameTimeDelta)
 
-                if (cactus.collideWith(player)) {
+                if (
+                    this.sprite.cactus.collideWith(this.sprite.player) ||
+                    this.sprite.bird.collideWith(this.sprite.player)
+                ) {
+                    this.showGameOver()
+                    this.renderGame()
+                    this.sprite.score.setHighScore()
                     return
                 }
 
-                updateGameSpeed(frameTimeDelta)
+                this.renderGame()
 
-                player.render()
-                ground.render()
-                cactus.render()
             }
 
             requestAnimationFrame(gameLoop)
@@ -125,4 +69,51 @@ export class GameScene {
 
         requestAnimationFrame(gameLoop)
     }
+
+    initGame() {
+        loadMap(this.ctx, this.sprite )
+    }
+
+    updateGame(frameTimeDelta: number) {
+        //update state
+        this.sprite.player.update(this.gameSpeed, frameTimeDelta)
+        this.sprite.ground.update(this.groundAndCactusSpeed, frameTimeDelta)
+        this.sprite.cactus.update(this.groundAndCactusSpeed, frameTimeDelta)
+        this.sprite.score.update(frameTimeDelta)
+        this.sprite.bird.update(this.groundAndCactusSpeed, frameTimeDelta)
+
+        //increase game speed
+        this.gameSpeed += frameTimeDelta * this.gameConfig.game.GAME_SPEED_INCREMENT
+        this.groundAndCactusSpeed += frameTimeDelta * this.gameConfig.game.GAME_SPEED_INCREMENT
+    }
+
+    renderGame() {
+        this.sprite.player.render()
+        this.sprite.ground.render()
+        this.sprite.cactus.render()
+        this.sprite.score.render()
+        this.sprite.bird.render()
+    }
+
+    showGameOver(this: any) {
+        const scaleRatio = getScaleRatio()
+        const fontSize = 70 * scaleRatio
+        if (this.ctx) {
+            this.ctx.font = `${fontSize}px Verdana`
+            this.ctx.fillStyle = 'grey'
+
+            const x = this.ctx.canvas.width / 4.5
+            const y = this.ctx.canvas.height / 2
+            this.ctx.fillText('GAME OVER', x, y)
+
+            let image = new Image()
+
+            image.src = './assets/images/replay.png'
+            image.onload = () => {
+                this.ctx.drawImage(image, x + 275, y + 20, 60, 60)
+            }
+        }
+    }
+
+    
 }

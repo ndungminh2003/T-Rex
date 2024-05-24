@@ -16,12 +16,16 @@ export class Player {
     GRAVITY: number
     canvas: any
     yStandingPosition: number
+    isDuck: boolean
 
     dinoRun1_Image: HTMLImageElement
     dinoRun2_Image: HTMLImageElement
 
     standingStillImage: HTMLImageElement
     stadingStillEyeCloseImage: HTMLImageElement
+
+    duckImage: HTMLImageElement
+    duck2Image: HTMLImageElement
 
     image: HTMLImageElement
 
@@ -42,8 +46,8 @@ export class Player {
         this.maxJumpHeight = maxJumpHeight
         this.minJumpHeight = minJumpHeight
 
-        this.x = 10 * scaleRatio
-        this.y = 200 * scaleRatio - this.height
+        this.x = 10 * this.scaleRatio
+        this.y = this.canvas.height - this.height - 1.5 * scaleRatio
         this.yStandingPosition = this.y
 
         this.standingStillImage = new Image()
@@ -54,7 +58,12 @@ export class Player {
 
         this.dinoRun2_Image = new Image()
         this.dinoRun2_Image.src = './assets/images/dino_run2.png'
-        
+
+        this.duckImage = new Image()
+        this.duckImage.src = './assets/images/duck.png'
+
+        this.duck2Image = new Image()
+        this.duck2Image.src = './assets/images/duck_2.png'
 
         this.stadingStillEyeCloseImage = new Image()
         this.stadingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
@@ -65,19 +74,37 @@ export class Player {
         this.GRAVITY = 0.4
         this.JUMP_SPEED = 0.6
         this.jumpPressed = false
+        this.isDuck = false
 
+        window.removeEventListener('keydown', this.keydown)
+        window.removeEventListener('keyup', this.keyup)
+
+        window.addEventListener('keydown', this.keydown)
         window.addEventListener('keyup', this.keyup)
     }
 
-    keyup = (event: { code: string }) => {
-        this.jumpPressed = true
+    keydown = (event: { code: string }) => {
+        if (event.code === 'Space') {
+            this.jumpPressed = true
+        } else if (event.code === 'ArrowDown') {
+            this.isDuck = true
+        }
     }
 
-    update(gameSpeed : number, frameTimeDelta : number) {
+    keyup = (event: { code: string }) => {
+        if (event.code === 'Space') {
+            this.jumpPressed = false
+        } else if (event.code === 'ArrowDown') {
+            this.isDuck = false
+        }
+    }
+
+    update(gameSpeed: number, frameTimeDelta: number) {
         this.run(gameSpeed, frameTimeDelta)
+        this.duck(gameSpeed, frameTimeDelta)
 
         if (this.jumpInProgress) {
-            this.image = this.standingStillImage;
+            this.image = this.standingStillImage
         }
 
         this.jump(frameTimeDelta)
@@ -87,38 +114,37 @@ export class Player {
         this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
     }
 
-    run(gameSpeed: number, frameTimeDelta : number) {
-
-        if(this.walkAnimationTimer <= 0){
-            if (this.image === this.dinoRun1_Image) {
-                this.image = this.dinoRun2_Image
-            } else {
-                this.image = this.dinoRun1_Image
+    run(gameSpeed: number, frameTimeDelta: number) {
+        if (!this.isDuck) {
+            if (this.walkAnimationTimer <= 0) {
+                if (this.image === this.dinoRun1_Image) {
+                    this.image = this.dinoRun2_Image
+                } else {
+                    this.image = this.dinoRun1_Image
+                }
+                this.walkAnimationTimer = 200
             }
-            this.walkAnimationTimer = 200;
+            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
         }
-        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
     }
 
-    jump(frameTimeDelta : number) {
+    jump(frameTimeDelta: number) {
         if (this.jumpPressed) {
             this.jumpInProgress = true
         }
 
         if (this.jumpInProgress && !this.falling) {
-
             this.image = this.stadingStillEyeCloseImage
-            if (
-                this.y > this.canvas.height - this.minJumpHeight ||
-                (this.y > this.canvas.height - this.maxJumpHeight && this.jumpPressed)
-            ) {
+            if (this.y > this.canvas.height - this.minJumpHeight) {
                 this.y -= this.JUMP_SPEED * this.scaleRatio * frameTimeDelta
+                
             } else {
                 this.falling = true
             }
         } else {
             if (this.y < this.yStandingPosition) {
                 this.y += this.GRAVITY * this.scaleRatio * frameTimeDelta
+                
                 if (this.y + this.height > this.canvas.height) {
                     this.y = this.yStandingPosition
                 }
@@ -130,6 +156,17 @@ export class Player {
         }
     }
 
-    duck() {}
+    duck(gameSpeed: number, frameTimeDelta: number) {
+        if (this.isDuck) {
+            if (this.walkAnimationTimer <= 0) {
+                if (this.image === this.duckImage) {
+                    this.image = this.duck2Image
+                } else {
+                    this.image = this.duckImage
+                }
+                this.walkAnimationTimer = 200
+            }
+            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
+        }
+    }
 }
-

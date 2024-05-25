@@ -1,5 +1,5 @@
 import { GameScene } from './scenes/GameScene';
-import { gameConfig } from './utilities/Config';
+import { gameConfig } from './game-engine/utilities/Config';
 
 
 class Game {

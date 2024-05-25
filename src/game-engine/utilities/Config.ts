@@ -11,6 +11,8 @@ export var gameConfig = {
         PLAYER_WIDTH: 58,
         PLAYER_HEIGHT: 62,
         JUMP_HEIGHT: 200,
+        JUMP_SPEED: 0.6,
+        GRAVITY: 0.4,
     },
 
     ground: {

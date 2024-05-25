@@ -1,8 +1,9 @@
-import { Bird } from '../object/Bird'
-import { Cactus } from '../object/Cactus'
-import { Ground } from '../object/Ground'
-import { Player } from '../object/Player'
-import { Score } from '../object/Score'
+import { Bird } from '../../object/enemy/Bird'
+import { Cactus } from '../../object/enemy/Cactus'
+import { Ground } from '../../object/map/Ground'
+import { Player } from '../../object/player/Player'
+import { Score } from '../../object/map/Score'
+import { Cloud } from '../../object/map/Cloud'
 import { gameConfig } from './Config'
 
 export function getScaleRatio() {
@@ -39,17 +40,14 @@ function createSprites(scaleRatio: number, sprite: any, ctx: any) {
     const cactusHeightInGame = gameConfig.cactus.CACTUS_HEIGHT * scaleRatio
 
     const player = new Player(
-        ctx.canvas,
         ctx,
         playerWidthInGame,
         playerHeightInGame,
         scaleRatio,
-        minJumpHeightInGame,
         minJumpHeightInGame
     )
 
     const ground = new Ground(
-        ctx.canvas,
         ctx,
         groundWidthInGame,
         groundHeightInGame,
@@ -75,6 +73,14 @@ function createSprites(scaleRatio: number, sprite: any, ctx: any) {
         gameConfig.game.GROUND_AND_CACTUS_SPEED
     )
 
+    const cloud = new Cloud(
+        ctx,
+        cactusWidthInGame,
+        cactusHeightInGame,
+        scaleRatio,
+        gameConfig.game.GROUND_AND_CACTUS_SPEED
+    )
+
     const score = new Score(ctx, scaleRatio)
 
     sprite.player = player
@@ -82,4 +88,5 @@ function createSprites(scaleRatio: number, sprite: any, ctx: any) {
     sprite.cactus = cactus
     sprite.bird = bird
     sprite.score = score
+    sprite.cloud = cloud
 }

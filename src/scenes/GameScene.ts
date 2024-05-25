@@ -1,9 +1,10 @@
-import { Player } from '../object/Player'
-import { Ground } from '../object/Ground'
-import { Cactus } from '../object/Cactus'
-import { Score } from '../object/Score'
-import { Bird } from '../object/Bird'
-import { loadMap, clearScreen, getScaleRatio } from '../utilities/Utilities'
+import { Player } from '../object/player/Player'
+import { Ground } from '../object/map/Ground'
+import { Cactus } from '../object/enemy/Cactus'
+import { Score } from '../object/map/Score'
+import { Bird } from '../object/enemy/Bird'
+import { Cloud } from '../object/map/Cloud'
+import { loadMap, clearScreen, getScaleRatio } from '../game-engine/utilities/Utilities'
 
 var Sprite = {
     player: Player,
@@ -11,6 +12,7 @@ var Sprite = {
     cactus: Cactus,
     bird: Bird,
     score: Score,
+    cloud: Cloud
 }
 
 export class GameScene {
@@ -42,6 +44,7 @@ export class GameScene {
             let frameTimeDelta = null
             if (currentTime) {
                 frameTimeDelta = currentTime - this.previousTime
+
             }
 
             this.previousTime = currentTime
@@ -81,6 +84,7 @@ export class GameScene {
         this.sprite.cactus.update(this.groundAndCactusSpeed, frameTimeDelta)
         this.sprite.score.update(frameTimeDelta)
         this.sprite.bird.update(this.groundAndCactusSpeed, frameTimeDelta)
+        this.sprite.cloud.update(this.groundAndCactusSpeed, frameTimeDelta)
 
         //increase game speed
         this.gameSpeed += frameTimeDelta * this.gameConfig.game.GAME_SPEED_INCREMENT
@@ -93,6 +97,7 @@ export class GameScene {
         this.sprite.cactus.render()
         this.sprite.score.render()
         this.sprite.bird.render()
+        this.sprite.cloud.render()
     }
 
     showGameOver(this: any) {
@@ -110,7 +115,7 @@ export class GameScene {
 
             image.src = './assets/images/replay.png'
             image.onload = () => {
-                this.ctx.drawImage(image, x + 275, y + 20, 60, 60)
+                this.ctx.drawImage(image, x + 270, y + 20, 60, 60)
             }
         }
     }

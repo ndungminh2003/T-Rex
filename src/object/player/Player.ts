@@ -1,22 +1,28 @@
+import { gameConfig } from '../../game-engine/utilities/Config'
+
+// enum playerState {
+//     run,
+//     jump,
+//     duck
+// }
+
 export class Player {
     ctx: any
     width: number
     height: number
     scaleRatio: number
-    maxJumpHeight: number
-    minJumpHeight: number
+    jumpHeight: number
     x: number
     y: number
+    yStandingPosition: number
+
     walkAnimationTimer: number
+
+    isDuck: boolean
     isJumping: boolean
     jumpPressed: boolean
     jumpInProgress: boolean
     falling: boolean
-    JUMP_SPEED: number
-    GRAVITY: number
-    canvas: any
-    yStandingPosition: number
-    isDuck: boolean
 
     dinoRun1_Image: HTMLImageElement
     dinoRun2_Image: HTMLImageElement
@@ -29,25 +35,16 @@ export class Player {
 
     image: HTMLImageElement
 
-    constructor(
-        canvas: any,
-        ctx: any,
-        width: number,
-        height: number,
-        scaleRatio: number,
-        maxJumpHeight: number,
-        minJumpHeight: number
-    ) {
-        this.canvas = canvas
+    jumpSpeed: number
+
+    constructor(ctx: any, width: number, height: number, scaleRatio: number, jumpHeight: number) {
         this.ctx = ctx
         this.width = width
         this.height = height
         this.scaleRatio = scaleRatio
-        this.maxJumpHeight = maxJumpHeight
-        this.minJumpHeight = minJumpHeight
-
+        this.jumpHeight = jumpHeight
         this.x = 10 * this.scaleRatio
-        this.y = this.canvas.height - this.height - 1.5 * scaleRatio
+        this.y = this.ctx.canvas.height - this.height - 1.5 * scaleRatio
         this.yStandingPosition = this.y
 
         this.standingStillImage = new Image()
@@ -71,10 +68,11 @@ export class Player {
         this.image = this.standingStillImage
 
         this.walkAnimationTimer = 200
-        this.GRAVITY = 0.4
-        this.JUMP_SPEED = 0.6
+
         this.jumpPressed = false
         this.isDuck = false
+
+        this.jumpSpeed = gameConfig.player.JUMP_SPEED
 
         window.removeEventListener('keydown', this.keydown)
         window.removeEventListener('keyup', this.keyup)
@@ -129,29 +127,40 @@ export class Player {
     }
 
     jump(frameTimeDelta: number) {
-        if (this.jumpPressed) {
-            this.jumpInProgress = true
-        }
+        // if (this.jumpPressed) {
+        //     this.jumpInProgress = true
+        // }
 
-        if (this.jumpInProgress && !this.falling) {
+        // if (this.jumpInProgress && !this.falling) {
+        //     this.image = this.stadingStillEyeCloseImage
+        //     if (this.y > this.ctx.canvas.height - this.jumpHeight) {
+        //         this.y -= gameConfig.player.JUMP_SPEED * this.scaleRatio * frameTimeDelta
+        //     } else {
+        //         this.falling = true
+        //     }
+        // } else {
+        //     if (this.y < this.yStandingPosition) {
+        //         this.y += gameConfig.player.GRAVITY * this.scaleRatio * frameTimeDelta
+
+        //         if (this.y + this.height > this.ctx.canvas.height) {
+        //             this.y = this.yStandingPosition
+        //         }
+        //     } else {
+        //         this.falling = false
+        //         this.jumpInProgress = false
+        //         this.jumpPressed = false
+        //     }
+        // }
+
+        if (this.jumpPressed) {
             this.image = this.stadingStillEyeCloseImage
-            if (this.y > this.canvas.height - this.minJumpHeight) {
-                this.y -= this.JUMP_SPEED * this.scaleRatio * frameTimeDelta
-                
-            } else {
-                this.falling = true
-            }
-        } else {
+
             if (this.y < this.yStandingPosition) {
-                this.y += this.GRAVITY * this.scaleRatio * frameTimeDelta
-                
-                if (this.y + this.height > this.canvas.height) {
-                    this.y = this.yStandingPosition
-                }
-            } else {
-                this.falling = false
-                this.jumpInProgress = false
-                this.jumpPressed = false
+                this.y -= this.jumpSpeed * this.scaleRatio * frameTimeDelta
+                this.jumpSpeed -= this.jumpSpeed * this.scaleRatio * gameConfig.player.GRAVITY
+            } else if (this.y >= this.yStandingPosition) {
+                this.y = this.yStandingPosition
+                this.jumpSpeed = gameConfig.player.JUMP_SPEED
             }
         }
     }

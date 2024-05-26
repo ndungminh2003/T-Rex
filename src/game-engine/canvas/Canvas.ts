@@ -1,9 +1,11 @@
 export class Canvas {
     private static instance: Canvas
     private canvas: HTMLCanvasElement
+    private ctx : CanvasRenderingContext2D
 
     constructor() {
-        this.canvas = document.getElementById('id') as HTMLCanvasElement
+        this.canvas = document.getElementById('game') as HTMLCanvasElement
+        
     }
 
     // singleton pattern
@@ -12,6 +14,10 @@ export class Canvas {
             Canvas.instance = new Canvas()
         }
         return Canvas.instance
+    }
+
+    public getContext(): CanvasRenderingContext2D {
+        return this.ctx
     }
 
     public getCanvas(): HTMLCanvasElement {

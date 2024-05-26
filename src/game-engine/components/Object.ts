@@ -1,5 +1,6 @@
 import { GameCore } from '../game-core/GameCore'
 import { gameCore } from '../game-core/GameCore'
+import { Canvas } from '../canvas/Canvas'
 
 export abstract class Object {
     protected isActive: boolean
@@ -11,6 +12,7 @@ export abstract class Object {
         this.isActive = true
         this.isEnabled = true
         this.gameCore = gameCore
+        this.canvas = gameCore.canvas.getCanvas()
     }
 
     public setToggleActive(active: boolean) {
@@ -19,5 +21,9 @@ export abstract class Object {
         } else if (!active && this.isEnabled) {
             this.isEnabled = false
         }
+    }
+
+    public reset() : void {
+        return
     }
 }

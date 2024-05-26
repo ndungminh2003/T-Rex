@@ -65,6 +65,16 @@ export abstract class GameObject extends Object {
         this.components.push(component)
     }
 
-    abstract update(): void
-    abstract render(frameTimeDelta: number): void
+    getComponent(name: string): Component | undefined {
+        for (let component of this.components) {
+            if (component.getName() === name) {
+                return component
+            }
+        }
+        return undefined
+    }
+
+
+    abstract update(gameSpeed: number, frameTimeDelta: number): void
+    abstract render(): void
 }

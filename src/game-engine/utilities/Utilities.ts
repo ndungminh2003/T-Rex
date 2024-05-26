@@ -1,9 +1,9 @@
-import { Bird } from '../../object/enemy/Bird'
-import { Cactus } from '../../object/enemy/Cactus'
-import { Ground } from '../../object/map/Ground'
-import { Player } from '../../object/player/Player'
-import { Score } from '../../object/map/Score'
-import { Cloud } from '../../object/map/Cloud'
+import { Bird } from '../../game/object/enemy/Bird'
+import { Cactus } from '../../game/object/enemy/Cactus'
+import { Ground } from '../../game/object/map/Ground'
+import { Player } from '../../game/object/player/Player'
+import { Score } from '../../game/object/map/Score'
+import { Cloud } from '../../game/object/map/Cloud'
 import { gameConfig } from './Config'
 
 export function getScaleRatio() {
@@ -25,8 +25,8 @@ export function clearScreen(ctx: any) {
 
 export function loadMap(ctx: any, sprite: any) {
     const scaleRatio = getScaleRatio()
-    ctx.canvas.width = gameConfig.game.GAME_WIDTH * scaleRatio
-    ctx.canvas.height = gameConfig.game.GAME_HEIGHT * scaleRatio
+    // ctx.canvas.width = gameConfig.game.GAME_WIDTH * scaleRatio
+    // ctx.canvas.height = gameConfig.game.GAME_HEIGHT * scaleRatio
     createSprites(scaleRatio, sprite, ctx)
 }
 
@@ -34,26 +34,12 @@ function createSprites(scaleRatio: number, sprite: any, ctx: any) {
     const playerWidthInGame = gameConfig.player.PLAYER_WIDTH * scaleRatio
     const playerHeightInGame = gameConfig.player.PLAYER_HEIGHT * scaleRatio
     const minJumpHeightInGame = gameConfig.player.JUMP_HEIGHT * scaleRatio
-    const groundWidthInGame = gameConfig.ground.GROUND_WIDTH * scaleRatio
-    const groundHeightInGame = gameConfig.ground.GROUND_HEIGHT * scaleRatio
     const cactusWidthInGame = gameConfig.cactus.CACTUS_WIDTH * scaleRatio
     const cactusHeightInGame = gameConfig.cactus.CACTUS_HEIGHT * scaleRatio
 
-    const player = new Player(
-        ctx,
-        playerWidthInGame,
-        playerHeightInGame,
-        scaleRatio,
-        minJumpHeightInGame
-    )
+    const player = new Player(scaleRatio, minJumpHeightInGame)
 
-    const ground = new Ground(
-        ctx,
-        groundWidthInGame,
-        groundHeightInGame,
-        scaleRatio,
-        gameConfig.game.GROUND_AND_CACTUS_SPEED
-    )
+    const ground = new Ground(scaleRatio, gameConfig.game.GROUND_AND_CACTUS_SPEED)
 
     const cactus = new Cactus(
         ctx.canvas,
@@ -64,22 +50,9 @@ function createSprites(scaleRatio: number, sprite: any, ctx: any) {
         gameConfig.game.GROUND_AND_CACTUS_SPEED
     )
 
-    const bird = new Bird(
-        ctx.canvas,
-        ctx,
-        cactusWidthInGame,
-        cactusHeightInGame,
-        scaleRatio,
-        gameConfig.game.GROUND_AND_CACTUS_SPEED
-    )
+    const bird = new Bird(scaleRatio, gameConfig.game.GROUND_AND_CACTUS_SPEED)
 
-    const cloud = new Cloud(
-        ctx,
-        cactusWidthInGame,
-        cactusHeightInGame,
-        scaleRatio,
-        gameConfig.game.GROUND_AND_CACTUS_SPEED
-    )
+    const cloud = new Cloud(scaleRatio, gameConfig.game.GROUND_AND_CACTUS_SPEED)
 
     const score = new Score(ctx, scaleRatio)
 

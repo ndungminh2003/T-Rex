@@ -32,7 +32,7 @@ export var gameConfig = {
 const scaleRatio = getScaleRatio()
 
 export const GAME_WIDTH = 810
-export const GAME_HEIGHT = 300
+export const GAME_HEIGHT = 200
 
 const myCanvas = Canvas.getInstance()
 export const canvas: HTMLCanvasElement = myCanvas.init(
@@ -45,4 +45,10 @@ export const GAME_STATES = {
     READY: 1,
     RUNNING: 2,
     GAME_OVER: 3,
+}
+
+export const PLAYER_STATES = {
+    RUNNING: 1,
+    JUMPING: 2,
+    COUCH: 3
 }

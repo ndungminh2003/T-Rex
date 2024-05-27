@@ -1,8 +1,9 @@
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { ctx } from '../../../game-engine/utilities/Config'
-import { gameConfig } from '../../../game-engine/utilities/Config'
 import { gameCore } from '../../../game-engine/game-core/GameCore'
+import { PLAYER_STATES } from '../../../game-engine/utilities/Config'
+import { Physic } from '../../../game-engine/physics/Physic'
 
 const standingStillImage = new Image()
 standingStillImage.src = './assets/images/standing_still.png'
@@ -22,20 +23,17 @@ duck2Image.src = './assets/images/duck_2.png'
 const stadingStillEyeCloseImage = new Image()
 stadingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
-export class Player extends Sprite {
+export class Dinosaur extends Sprite {
     scaleRatio: number
-    jumpHeight: number
+    state: number
 
     yStandingPosition: number
-    walkAnimationTimer: number
-
     isDuck: boolean
-    isJumping: boolean
     jumpPressed: boolean
-    jumpInProgress: boolean
-    falling: boolean
 
-    jumpSpeed: number
+    gravity: number
+    velocity: Vec2D
+    walkAnimationTimer: number
 
     constructor(scaleRatio: number, gameSpeed: number) {
         super()
@@ -43,8 +41,7 @@ export class Player extends Sprite {
 
         this.width = 58 //* scaleRatio
         this.height = 62 //* scaleRatio
-
-        this.jumpHeight = 200
+        this.state = PLAYER_STATES.RUNNING
 
         this.position = new Vec2D(
             10 * this.scaleRatio,
@@ -60,8 +57,10 @@ export class Player extends Sprite {
         this.jumpPressed = false
         this.isDuck = false
 
-        this.jumpSpeed = gameConfig.player.JUMP_SPEED
+        this.gravity = 20 * this.scaleRatio
+        this.velocity = new Vec2D(0, -this.gravity)
 
+        this.addComponent(new Physic(this, this.scaleRatio))
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
@@ -69,17 +68,23 @@ export class Player extends Sprite {
             gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
             gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
         ) {
+            this.state = PLAYER_STATES.JUMPING
             this.jumpPressed = true
         }
 
-        this.run(gameSpeed, frameTimeDelta)
-        this.duck(gameSpeed, frameTimeDelta)
-
-        if (this.jumpInProgress) {
-            this.image = stadingStillEyeCloseImage
+        switch (this.state) {
+            case PLAYER_STATES.RUNNING: {
+                this.run(gameSpeed, frameTimeDelta)
+                break
+            }
+            case PLAYER_STATES.JUMPING: {
+                this.jump(frameTimeDelta)
+                break
+            }
+            case PLAYER_STATES.COUCH: {
+                this.duck(gameSpeed, frameTimeDelta)
+            }
         }
-
-        this.jump(frameTimeDelta)
     }
 
     render() {
@@ -108,48 +113,19 @@ export class Player extends Sprite {
 
     jump(frameTimeDelta: number) {
         if (this.jumpPressed) {
-            this.jumpInProgress = true
-        }
+            this.velocity = Vec2D.add(
+                this.velocity,
+                new Vec2D(0, (this.gravity * frameTimeDelta) / 500)
+            )
 
-        if (this.jumpInProgress && !this.falling) {
-            this.image = stadingStillEyeCloseImage
-            if (this.position.getY() > ctx.canvas.height - this.jumpHeight) {
-                this.position.setY(
-                    this.position.getY() -
-                        gameConfig.player.JUMP_SPEED * this.scaleRatio * frameTimeDelta
-                )
-            } else {
-                this.falling = true
-            }
-        } else {
-            if (this.position.getY() < this.yStandingPosition) {
-                this.position.setY(
-                    this.position.getY() +
-                        gameConfig.player.GRAVITY * this.scaleRatio * frameTimeDelta
-                )
-
-                if (this.position.getY() + this.height > ctx.canvas.height) {
-                    //this.y = this.yStandingPosition
-                    this.position.setY(this.yStandingPosition)
-                }
-            } else {
-                this.falling = false
-                this.jumpInProgress = false
+            this.position = Vec2D.add(this.position, Vec2D.mul(this.velocity, this.gravity / 100))
+            if (this.position.getY() >= this.yStandingPosition) {
+                this.position.setY(this.yStandingPosition)
+                this.velocity = new Vec2D(0, -this.gravity)
                 this.jumpPressed = false
+                this.state = PLAYER_STATES.RUNNING
             }
         }
-
-        // if (this.jumpPressed) {
-        //     this.image = this.stadingStillEyeCloseImage
-
-        //     if (this.y < this.yStandingPosition) {
-        //         this.y -= this.jumpSpeed * this.scaleRatio * frameTimeDelta
-        //         this.jumpSpeed -= this.jumpSpeed * this.scaleRatio * gameConfig.player.GRAVITY
-        //     } else if (this.y >= this.yStandingPosition) {
-        //         this.y = this.yStandingPosition
-        //         this.jumpSpeed = gameConfig.player.JUMP_SPEED
-        //     }
-        // }
     }
 
     duck(frameTimeDelta: number, gameSpeed: number) {

@@ -49,5 +49,3 @@ export class Ground extends Sprite {
         }
     }
 }
-
-

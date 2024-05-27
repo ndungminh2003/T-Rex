@@ -1,4 +1,4 @@
-import { Player } from '../object/player/Player'
+import { Dinosaur } from '../object/player/Dinosaur'
 import { Ground } from '../object/map/Ground'
 import { Cactus } from '../object/enemy/Cactus'
 import { Score } from '../object/map/Score'
@@ -10,7 +10,7 @@ import { gameCore } from '../../game-engine/game-core/GameCore'
 import { Scene } from '../../game-engine/scene/Scene'
 
 export class GameScene extends Scene {
-    Player: Player
+    Player: Dinosaur
     Ground: Ground
     Cactus: Cactus
     Score: Score
@@ -25,7 +25,7 @@ export class GameScene extends Scene {
 
         let scaleRatio = getScaleRatio()
 
-        this.Player = new Player(scaleRatio, 1)
+        this.Player = new Dinosaur(scaleRatio, 1)
         this.Ground = new Ground(scaleRatio, 1)
         // this.Cactus = new Cactus()
         this.Score = new Score(scaleRatio, 1)

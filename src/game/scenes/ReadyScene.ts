@@ -1,4 +1,4 @@
-import { Player } from './../object/player/Player'
+import { Dinosaur } from '../object/player/Dinosaur'
 import { Ground } from './../object/map/Ground'
 import { Scene } from '../../game-engine/scene/Scene'
 import { getScaleRatio } from '../../game-engine/utilities/Utilities'
@@ -7,7 +7,7 @@ import { Bird } from '../object/enemy/Bird'
 import { Cloud } from '../object/map/Cloud'
 
 export class ReadyScene extends Scene {
-    player: Player
+    player: Dinosaur
     ground: Ground
     score: Score
     bird: Bird
@@ -16,7 +16,7 @@ export class ReadyScene extends Scene {
     public load(): void {
         let scaleRatio = getScaleRatio()
 
-        this.player = new Player(scaleRatio, 1)
+        this.player = new Dinosaur(scaleRatio, 1)
         this.ground = new Ground(scaleRatio, 1)
         // this.Cactus = new Cactus()
         // this.score = new Score(scaleRatio, 1)

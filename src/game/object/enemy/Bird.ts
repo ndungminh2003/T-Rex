@@ -27,14 +27,14 @@ export class Bird extends Sprite {
         this.flyAnimationTimer = 100
     }
 
-    update(gameSpeed: number, frameTimeDelta: number) {
+    update(frameTimeDelta: number, gameSpeed: number,) {
         this.fly(gameSpeed, frameTimeDelta)
         this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta * this.speed * this.scaleRatio
+            this.position.getX() - gameSpeed * frameTimeDelta * this.speed //* this.scaleRatio
         )
     }
 
-    fly(gameSpeed: number, frameTimeDelta: number) {
+    fly(frameTimeDelta: number, gameSpeed: number, ) {
         if (this.flyAnimationTimer <= 0) {
             if (this.image === birdImage1) {
                 this.image = birdImage2

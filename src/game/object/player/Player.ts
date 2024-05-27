@@ -2,6 +2,7 @@ import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { ctx } from '../../../game-engine/utilities/Config'
 import { gameConfig } from '../../../game-engine/utilities/Config'
+import { gameCore } from '../../../game-engine/game-core/GameCore'
 
 const standingStillImage = new Image()
 standingStillImage.src = './assets/images/standing_still.png'
@@ -40,10 +41,8 @@ export class Player extends Sprite {
         super()
         this.scaleRatio = scaleRatio
 
-
         this.width = 58 //* scaleRatio
         this.height = 62 //* scaleRatio
-        
 
         this.jumpHeight = 200
 
@@ -63,30 +62,16 @@ export class Player extends Sprite {
 
         this.jumpSpeed = gameConfig.player.JUMP_SPEED
 
-        // window.removeEventListener('keydown', this.keydown)
-        // window.removeEventListener('keyup', this.keyup)
-
-        // window.addEventListener('keydown', this.keydown)
-        // window.addEventListener('keyup', this.keyup)
     }
 
-    // keydown = (event: { code: string }) => {
-    //     if (event.code === 'Space') {
-    //         this.jumpPressed = true
-    //     } else if (event.code === 'ArrowDown') {
-    //         this.isDuck = true
-    //     }
-    // }
+    update(frameTimeDelta: number, gameSpeed: number) {
+        if (
+            gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
+            gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
+        ) {
+            this.jumpPressed = true
+        }
 
-    // keyup = (event: { code: string }) => {
-    //     if (event.code === 'Space') {
-    //         this.jumpPressed = false
-    //     } else if (event.code === 'ArrowDown') {
-    //         this.isDuck = false
-    //     }
-    // }
-
-    update(gameSpeed: number, frameTimeDelta: number) {
         this.run(gameSpeed, frameTimeDelta)
         this.duck(gameSpeed, frameTimeDelta)
 
@@ -107,7 +92,7 @@ export class Player extends Sprite {
         )
     }
 
-    run(gameSpeed: number, frameTimeDelta: number) {
+    run(frameTimeDelta: number, gameSpeed: number) {
         if (!this.isDuck) {
             if (this.walkAnimationTimer <= 0) {
                 if (this.image === dinoRun1_Image) {
@@ -167,7 +152,7 @@ export class Player extends Sprite {
         // }
     }
 
-    duck(gameSpeed: number, frameTimeDelta: number) {
+    duck(frameTimeDelta: number, gameSpeed: number) {
         if (this.isDuck) {
             if (this.walkAnimationTimer <= 0) {
                 if (this.image === duckImage) {

@@ -1,9 +1,10 @@
+import e from 'express'
 import { KEY_CODE } from '../utilities/KeyCode'
 
 export class InputManager {
     private static instance: InputManager
-    private readonly keyCode: { [key: string]: number }
-    private keyEvent: { [key: string]: { [key: string]: boolean } }
+    public readonly keyCode: { [key: string]: number }
+    public keyEvent: { [key: string]: { [key: string]: boolean } }
 
     constructor() {
         this.keyCode = KEY_CODE
@@ -11,10 +12,14 @@ export class InputManager {
             keyDown: {},
             keyUp: {},
         }
+
+        // Bind the methods to the instance
+        this.handleKeyDown = this.handleKeyDown.bind(this)
+        this.handleKeyUp = this.handleKeyUp.bind(this)
     }
 
     // Singleton pattern
-    public static getInstacne(): InputManager {
+    public static getInstance(): InputManager {
         if (!InputManager.instance) {
             InputManager.instance = new InputManager()
         }
@@ -26,29 +31,22 @@ export class InputManager {
         window.addEventListener('keyup', this.handleKeyUp)
     }
 
-    private hasKeyDown(keyCode: string): boolean {
-        if (this.keyEvent.keyDown[keyCode] === true) {
-            return true
-        }
-        return false
+    hasKeyDown(keyCode: number): boolean {
+        return this.keyEvent.keyDown[keyCode] === true
     }
 
-    private hasKeyUp(keyCode: string): boolean {
-        if (this.keyEvent.keyUp[keyCode] === true) {
-            return true
-        }
-        return false
+    hasKeyUp(keyCode: number): boolean {
+        return this.keyEvent.keyUp[keyCode] === true
     }
 
-    private handleKeyDown(event: KeyboardEvent): void {
-        if (!this.hasKeyDown(event.code)) {
-            this.keyEvent.keyDown[event.code] = true
+    handleKeyDown(event: KeyboardEvent): void {
+        if (!this.hasKeyDown(event.which)) {
+            this.keyEvent.keyDown[event.which] = true
         }
     }
 
-    private handleKeyUp(event: KeyboardEvent): void {
-        this.keyEvent.KeyUp[event.code] = true
-        delete this.keyEvent.KeyDown[event.code]
+    handleKeyUp(event: KeyboardEvent): void {
+        this.keyEvent.keyUp[event.which] = true
+        delete this.keyEvent.keyDown[event.which]  
     }
-
 }

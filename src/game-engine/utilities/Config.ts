@@ -1,5 +1,5 @@
-import { Canvas } from "../canvas/Canvas"
-import { getScaleRatio } from "./Utilities"
+import { Canvas } from '../canvas/Canvas'
+import { getScaleRatio } from './Utilities'
 
 export var gameConfig = {
     game: {
@@ -31,12 +31,18 @@ export var gameConfig = {
 
 const scaleRatio = getScaleRatio()
 
-const GAME_WIDTH = 800
-const GAME_HEIGHT = 300
+export const GAME_WIDTH = 810
+export const GAME_HEIGHT = 300
 
-const myCanvas = Canvas.getInstance() 
-export const canvas: HTMLCanvasElement = myCanvas.init(GAME_HEIGHT * scaleRatio, GAME_WIDTH * scaleRatio)
+const myCanvas = Canvas.getInstance()
+export const canvas: HTMLCanvasElement = myCanvas.init(
+    GAME_HEIGHT * scaleRatio,
+    GAME_WIDTH * scaleRatio
+)
 export const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
 
-
-
+export const GAME_STATES = {
+    READY: 1,
+    RUNNING: 2,
+    GAME_OVER: 3,
+}

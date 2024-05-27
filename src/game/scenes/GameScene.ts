@@ -5,6 +5,7 @@ import { Score } from '../object/map/Score'
 import { Bird } from '../object/enemy/Bird'
 import { Cloud } from '../object/map/Cloud'
 import { getScaleRatio } from '../../game-engine/utilities/Utilities'
+import { gameCore } from '../../game-engine/game-core/GameCore'
 
 import { Scene } from '../../game-engine/scene/Scene'
 
@@ -16,8 +17,8 @@ export class GameScene extends Scene {
     Bird: Bird
     Cloud: Cloud
 
-    constructor(frameTimeDelta: number, gameSpeed: number) {
-        super(frameTimeDelta, gameSpeed)
+    constructor() {
+        super()
     }
 
     public load(): void {
@@ -39,9 +40,10 @@ export class GameScene extends Scene {
         this.addGameObject(this.Cloud)
     }
 
-    public update(): void {
+    public update(frameTimeDelta : number, gameSpeed : number): void {
+
         for (let i = 0; i < this.gameObjects.length; i++) {
-            this.gameObjects[i].update(this.frameTimeDelta, this.gameSpeed)
+            this.gameObjects[i].update(frameTimeDelta, gameSpeed)
         }
     }
 

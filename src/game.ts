@@ -1,20 +1,22 @@
 import { gameCore } from './game-engine/game-core/GameCore'
 import { ctx, canvas } from './game-engine/utilities/Config'
+import { GameScene } from './game/scenes/GameScene'
+import { ReadyScene } from './game/scenes/ReadyScene'
+import { getScaleRatio } from './game-engine/utilities/Utilities'
+import { GAME_WIDTH, GAME_HEIGHT } from './game-engine/utilities/Config'
 
-gameCore.start(800, 300)
+gameCore.start(GAME_WIDTH * getScaleRatio(), GAME_HEIGHT * getScaleRatio(), new GameScene())
 
-function clearScreen() {
-    ctx.fillStyle = 'white'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-}
 
 function loop(lastTime: number): void {
     const curTime = Date.now()
-    clearScreen()
+
     gameCore.render()
-    gameCore.update()
+    gameCore.update(curTime - lastTime, 0.6)
     lastTime = Date.now()
+
     requestAnimationFrame(() => loop(lastTime))
+
 }
 
 loop(Date.now())

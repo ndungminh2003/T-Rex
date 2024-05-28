@@ -1,4 +1,4 @@
-import { GAME_STATES } from './../../../game-engine/utilities/Config'
+import { GAME_STATES, GROUND_POSITION } from './../../../game-engine/utilities/Config'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { ctx } from '../../../game-engine/utilities/Config'
@@ -25,6 +25,7 @@ duck2Image.src = './assets/images/crouch_2.png'
 const standingStillEyeCloseImage = new Image()
 standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
+
 export class Dinosaur extends Sprite {
     scaleRatio: number
     state: number
@@ -37,16 +38,17 @@ export class Dinosaur extends Sprite {
         super()
         this.scaleRatio = getScaleRatio()
 
-        this.width = 58 //* scaleRatio
-        this.height = 62 //* scaleRatio
+        //  this.width = 58 //* scaleRatio
+        //  this.height = 62 //* scaleRatio
+        this.image = standingStillImage
+        this.width = this.image.width
+        this.height = this.image.height
         this.state = PLAYER_STATES.RUNNING
 
         this.position = new Vec2D(
             10 * this.scaleRatio,
             this.canvas.height - this.height - 1.5 * scaleRatio
         )
-
-        this.image = standingStillImage
 
         this.walkAnimationTimer = 200
 
@@ -66,10 +68,12 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.CROUCH
                 }
                 this.run(frameTimeDelta, gameSpeed)
+                this.resetPos()
                 break
 
             case PLAYER_STATES.JUMPING:
                 this.image = standingStillEyeCloseImage
+
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = duckImage
                     this.physic.velocity.setY(
@@ -96,17 +100,26 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.RUNNING
                     this.position.setY(this.physic.land)
                     this.physic.velocity.setY(10 * this.scaleRatio)
+                    
                 }
                 break
             case PLAYER_STATES.CROUCH:
-                // this.setWidth(80)
-                // this.setHeight(83)
                 if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.state = PLAYER_STATES.RUNNING
                 }
+                
                 this.duck(frameTimeDelta, gameSpeed)
+                this.resetPos()
                 break
         }
+         
+    }
+
+
+    private resetPos() : void {
+        this.width = this.image.width
+        this.height = this.image.height
+        this.position = new Vec2D(this.position.getX(), this.canvas.height - this.height - 1.5 * this.scaleRatio)
     }
 
     render() {

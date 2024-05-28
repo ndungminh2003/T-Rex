@@ -1,5 +1,6 @@
 import { Canvas } from '../canvas/Canvas'
 import { getScaleRatio } from './Utilities'
+import { Vec2D } from './Vec2D'
 
 export var gameConfig = {
     game: {
@@ -53,3 +54,5 @@ export const PLAYER_STATES = {
     FALLING: 3,
     CROUCH: 4,
 }
+
+export const GROUND_POSITION = new Vec2D(0, canvas.height -1050)

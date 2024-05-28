@@ -67,13 +67,10 @@ export class GameScene extends Scene {
 
         if (Math.random() > 0.5) {
             enemy = new Cactus(scaleRatio, 1, 13)
-        } else {
-            enemy = this.birds[this.currentBirdIndex]
-            this.currentBirdIndex = (this.currentBirdIndex + 1) % this.birds.length
+            this.enemies.push(enemy)
+            this.addGameObject(enemy)
         }
 
-        this.enemies.push(enemy)
-        this.addGameObject(enemy)
     }
 
     public update(frameTimeDelta: number, gameSpeed: number): void {

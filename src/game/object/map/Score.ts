@@ -28,7 +28,7 @@ export class Score extends GameObject {
         ctx.fillStyle = 'grey'
 
         const scoreX = this.canvas.width - 60 * this.scaleRatio
-        const highScoreX = scoreX - 100
+        const highScoreX = scoreX - 150
 
         const scorePadded = Math.floor(this.score).toString().padStart(5, '0')
         const highScorePadded = 'Hi: ' + highScore.toString().padStart(5, '0')

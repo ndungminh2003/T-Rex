@@ -1,3 +1,4 @@
+import { GameCore, gameCore } from './../game-core/GameCore'
 import { GameObject } from '../components/GameObject'
 
 export abstract class Scene {

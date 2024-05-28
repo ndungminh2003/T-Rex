@@ -1,14 +1,13 @@
-export class Score {
-    HIGH_SCORE_KEY: string
+import { ctx } from '../../../game-engine/utilities/Config'
+import { GameObject } from '../../../game-engine/components/GameObject'
 
-    ctx: any
-    canvas: any
+export class Score extends GameObject {
+    HIGH_SCORE_KEY: string
     score: number
     scaleRatio: number
 
-    constructor(ctx: any, scaleRatio: number) {
-        this.ctx = ctx
-        this.canvas = ctx.canvas
+    constructor(scaleRatio: number) {
+        super()
         this.score = 0
         this.scaleRatio = scaleRatio
     }
@@ -25,8 +24,8 @@ export class Score {
         const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY))
         const y = 20 * this.scaleRatio
         const fontsize = 15 * this.scaleRatio
-        this.ctx.font = `${fontsize}px serif`
-        this.ctx.fillStyle = 'grey'
+        ctx.font = `${fontsize}px serif`
+        ctx.fillStyle = 'grey'
 
         const scoreX = this.canvas.width - 60 * this.scaleRatio
         const highScoreX = scoreX - 100
@@ -34,8 +33,8 @@ export class Score {
         const scorePadded = Math.floor(this.score).toString().padStart(5, '0')
         const highScorePadded = 'Hi: ' + highScore.toString().padStart(5, '0')
 
-        this.ctx.fillText(scorePadded, scoreX, y)
-        this.ctx.fillText(highScorePadded, highScoreX, y)
+        ctx.fillText(scorePadded, scoreX, y)
+        ctx.fillText(highScorePadded, highScoreX, y)
     }
 
     setHighScore() {

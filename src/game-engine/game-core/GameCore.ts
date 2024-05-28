@@ -4,6 +4,7 @@ import { Scene } from '../scene/Scene'
 import { GAME_STATES } from '../utilities/Config'
 import { Canvas } from '../canvas/Canvas'
 import { ctx, canvas } from '../utilities/Config'
+import { ReadyScene } from '../../game/scenes/ReadyScene'
 
 export class GameCore {
     private static instance: GameCore
@@ -15,6 +16,7 @@ export class GameCore {
 
     constructor() {
         this.state = GAME_STATES.READY
+        this.setCurrentScene(new ReadyScene())
         this.canvas = Canvas.getInstance()
         this.inputManager = InputManager.getInstance()
         this.sceneManager = SceneManager.getInstance()
@@ -32,21 +34,28 @@ export class GameCore {
         this.canvas.init(w, h)
         this.inputManager.start()
         this.sceneManager.loadScene(startScene)
-        
     }
 
-    public clearScreen() : void{
+    public clearScreen(): void {
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
 
-    public update(frameTimeDelta : number, gameSpeed : number): void {
+    public update(frameTimeDelta: number, gameSpeed: number): void {
         this.sceneManager.update(frameTimeDelta, gameSpeed)
     }
 
     public render(): void {
         this.clearScreen()
         this.sceneManager.render()
+    }
+
+    public getCurrentScene(): Scene {
+        return this.currentScene
+    }
+
+    public setCurrentScene(scene: Scene): void {
+        this.currentScene = scene
     }
 }
 

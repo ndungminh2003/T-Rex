@@ -15,25 +15,21 @@ const dinoRun2_Image = new Image()
 dinoRun2_Image.src = './assets/images/dino_run2.png'
 
 const duckImage = new Image()
-duckImage.src = './assets/images/duck.png'
+duckImage.src = './assets/images/crouch_1.png'
 
 const duck2Image = new Image()
-duck2Image.src = './assets/images/duck_2.png'
+duck2Image.src = './assets/images/crouch_2.png'
 
-const stadingStillEyeCloseImage = new Image()
-stadingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
+const standingStillEyeCloseImage = new Image()
+standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
 export class Dinosaur extends Sprite {
     scaleRatio: number
     state: number
 
-    yStandingPosition: number
-    isDuck: boolean
-    jumpPressed: boolean
-
-    gravity: number
-    velocity: Vec2D
     walkAnimationTimer: number
+
+    physic: Physic
 
     constructor(scaleRatio: number, gameSpeed: number) {
         super()
@@ -48,42 +44,52 @@ export class Dinosaur extends Sprite {
             this.canvas.height - this.height - 1.5 * scaleRatio
         )
 
-        this.yStandingPosition = this.canvas.height - this.height - 1.5 * scaleRatio
-
         this.image = standingStillImage
 
         this.walkAnimationTimer = 200
 
-        this.jumpPressed = false
-        this.isDuck = false
-
-        this.gravity = 20 * this.scaleRatio
-        this.velocity = new Vec2D(0, -this.gravity)
-
-        this.addComponent(new Physic(this, this.scaleRatio))
+        this.physic = new Physic(this, scaleRatio)
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
-        if (
-            gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
-            gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
-        ) {
-            this.state = PLAYER_STATES.JUMPING
-            this.jumpPressed = true
-        }
-
         switch (this.state) {
-            case PLAYER_STATES.RUNNING: {
-                this.run(gameSpeed, frameTimeDelta)
+            case PLAYER_STATES.RUNNING:
+                if (
+                    gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
+                    gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
+                ) {
+                    this.state = PLAYER_STATES.JUMPING
+                } else if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
+                    this.state = PLAYER_STATES.CROUCH
+                }
+                this.run(frameTimeDelta, gameSpeed)
                 break
-            }
-            case PLAYER_STATES.JUMPING: {
-                this.jump(frameTimeDelta)
+
+            case PLAYER_STATES.JUMPING:
+                this.image = standingStillEyeCloseImage
+                if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
+                    this.image = duckImage
+                    this.physic.velocity.setY(this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 3)
+                }
+                this.physic.update(frameTimeDelta)
+                if (this.physic.velocity.getY() >= 0) {
+                    this.state = PLAYER_STATES.FALLING
+                }
                 break
-            }
-            case PLAYER_STATES.COUCH: {
-                this.duck(gameSpeed, frameTimeDelta)
-            }
+
+            case PLAYER_STATES.FALLING:
+                this.physic.update(frameTimeDelta)
+                if (this.position.getY() >= this.physic.land) {
+                    this.state = PLAYER_STATES.RUNNING
+                    this.position.setY(this.physic.land)
+                }
+                break
+            case PLAYER_STATES.CROUCH:
+                if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
+                    this.state = PLAYER_STATES.RUNNING
+                }
+                this.duck(frameTimeDelta, gameSpeed)
+                break
         }
     }
 
@@ -98,47 +104,26 @@ export class Dinosaur extends Sprite {
     }
 
     run(frameTimeDelta: number, gameSpeed: number) {
-        if (!this.isDuck) {
-            if (this.walkAnimationTimer <= 0) {
-                if (this.image === dinoRun1_Image) {
-                    this.image = dinoRun2_Image
-                } else {
-                    this.image = dinoRun1_Image
-                }
-                this.walkAnimationTimer = 200
+        if (this.walkAnimationTimer <= 0) {
+            if (this.image === dinoRun1_Image) {
+                this.image = dinoRun2_Image
+            } else {
+                this.image = dinoRun1_Image
             }
-            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
+            this.walkAnimationTimer = 200
         }
-    }
-
-    jump(frameTimeDelta: number) {
-        if (this.jumpPressed) {
-            this.velocity = Vec2D.add(
-                this.velocity,
-                new Vec2D(0, (this.gravity * frameTimeDelta) / 500)
-            )
-
-            this.position = Vec2D.add(this.position, Vec2D.mul(this.velocity, this.gravity / 100))
-            if (this.position.getY() >= this.yStandingPosition) {
-                this.position.setY(this.yStandingPosition)
-                this.velocity = new Vec2D(0, -this.gravity)
-                this.jumpPressed = false
-                this.state = PLAYER_STATES.RUNNING
-            }
-        }
+        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
     }
 
     duck(frameTimeDelta: number, gameSpeed: number) {
-        if (this.isDuck) {
-            if (this.walkAnimationTimer <= 0) {
-                if (this.image === duckImage) {
-                    this.image = duck2Image
-                } else {
-                    this.image = duckImage
-                }
-                this.walkAnimationTimer = 200
+        if (this.walkAnimationTimer <= 0) {
+            if (this.image === duckImage) {
+                this.image = duck2Image
+            } else {
+                this.image = duckImage
             }
-            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
+            this.walkAnimationTimer = 200
         }
+        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
     }
 }

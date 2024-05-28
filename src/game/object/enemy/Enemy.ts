@@ -1,42 +1,26 @@
-export abstract class Enemy {
-    protected ctx: any
-    protected canvas: any
-    protected width: number
-    protected height: number
-    protected scaleRatio: number
-    protected speed: number
-    protected x: number
-    protected y: number
-    protected image: HTMLImageElement
+import { Sprite } from '../../../game-engine/sprite/Sprite'
+import { ctx } from '../../../game-engine/utilities/Config'
+import { Dinosaur } from '../player/Dinosaur'
 
-    constructor(
-        canvas: any,
-        ctx: any,
-        width: number,
-        height: number,
-        scaleRatio: number,
-        speed: number
-    ) {
-        this.ctx = ctx
-        this.width = width
-        this.height = height
-        this.scaleRatio = scaleRatio
-        this.canvas = canvas
-        this.speed = speed
+export abstract class Enemy extends Sprite {
+    constructor(scaleRatio: number) {
+        super()
     }
 
     update(gameSpeed: number, frameTimeDelta: number) {
-        this.x -= gameSpeed * frameTimeDelta * this.speed * this.scaleRatio
+        this.position.setX(
+            this.position.getX() - gameSpeed * frameTimeDelta * 1 //* this.scaleRatio
+        )
     }
 
-    collideWith(player: any) {
+    collideWith(player: Dinosaur) {
+        
         const adjustBy = 1.4
-
         if (
-            player.x < this.x + this.width / adjustBy &&
-            player.x + player.width / adjustBy > this.x &&
-            player.y < this.y + this.height / adjustBy &&
-            player.y + player.height / adjustBy > this.y
+            player.getPos().getX() < this.position.getX() + this.width / adjustBy &&
+            player.getPos().getX() + player.getWidth() / adjustBy > this.position.getX() &&
+            player.getPos().getY() < this.position.getY() + this.height / adjustBy &&
+            player.getPos().getY() + player.getHeight() / adjustBy > this.position.getY()
         ) {
             return true
         } else {
@@ -45,10 +29,16 @@ export abstract class Enemy {
     }
 
     render() {
-        this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+        ctx.drawImage(
+            this.image,
+            this.getPos().getX(),
+            this.getPos().getY(),
+            this.width,
+            this.height
+        )
 
-        if (this.x <= -this.width) {
-            this.x = this.width + window.innerWidth
+        if (this.getPos().getX() <= -this.width) {
+            this.getPos().setX(this.width + window.innerWidth)
         }
     }
 }

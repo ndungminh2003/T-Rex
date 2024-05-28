@@ -10,7 +10,6 @@ import { Enemy } from '../object/enemy/Enemy'
 import { Vec2D } from '../../game-engine/utilities/Vec2D'
 import { gameCore } from '../../game-engine/game-core/GameCore'
 import { GAME_STATES } from '../../game-engine/utilities/Config'
-import { OverScene } from './OverScene'
 
 export class GameScene extends Scene {
     player: Dinosaur
@@ -20,7 +19,7 @@ export class GameScene extends Scene {
     enemies: Enemy[] = []
     birds: Bird[] = []
     currentBirdIndex: number = 0
-    enemySpawnInterval: number = 4000
+    enemySpawnInterval: number = 2000
     lastEnemySpawnTime: number = 0
     gameSpeed: number
 
@@ -37,6 +36,7 @@ export class GameScene extends Scene {
         this.ground = new Ground(scaleRatio, 1)
         this.score = new Score(scaleRatio)
         this.cloud = new Cloud(scaleRatio, 1)
+        this.birds.push(new Bird(scaleRatio, 1, this.birdSpawnPositions[1], 14))
 
         this.addGameObject(this.ground)
         this.addGameObject(this.cloud)
@@ -70,7 +70,6 @@ export class GameScene extends Scene {
             this.enemies.push(enemy)
             this.addGameObject(enemy)
         }
-
     }
 
     public update(frameTimeDelta: number, gameSpeed: number): void {

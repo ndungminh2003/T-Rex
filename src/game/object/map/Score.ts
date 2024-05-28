@@ -12,15 +12,20 @@ export class Score extends GameObject {
         this.scaleRatio = scaleRatio
     }
 
-    reset() {
+    public reset() : void {
         this.score = 0
     }
 
-    update(frameTimeDelta: number) {
+    public getScore() : number {
+        return this.score
+    }
+
+
+    public update(frameTimeDelta: number) : void {
         this.score += frameTimeDelta * 0.01
     }
 
-    render() {
+    public render() : void {
         const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY))
         const y = 20 * this.scaleRatio
         const fontsize = 15 * this.scaleRatio
@@ -37,7 +42,7 @@ export class Score extends GameObject {
         ctx.fillText(highScorePadded, highScoreX, y)
     }
 
-    setHighScore() {
+    public setHighScore() : void {
         const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY))
         if (this.score > highScore) {
             localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score).toString())

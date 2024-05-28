@@ -9,7 +9,7 @@ import { getScaleRatio } from './game-engine/utilities/Utilities'
 export class GameManager {
     private static instance: GameManager
     public gameCore: GameCore
-    public gameSpeed : number
+    public gameSpeed: number
 
     constructor() {
         this.gameCore = gameCore
@@ -21,8 +21,8 @@ export class GameManager {
         this.gameSpeed = 0.7
     }
 
-    public updateGameSpeed() : void {
-        this.gameSpeed += 0.000000001
+    public updateGameSpeed(): void {
+        this.gameSpeed += 0.0001
     }
 
     public static getInstance(): GameManager {

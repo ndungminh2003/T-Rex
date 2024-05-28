@@ -25,7 +25,6 @@ duck2Image.src = './assets/images/crouch_2.png'
 const standingStillEyeCloseImage = new Image()
 standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
-
 export class Dinosaur extends Sprite {
     scaleRatio: number
     state: number
@@ -75,13 +74,15 @@ export class Dinosaur extends Sprite {
                 this.image = standingStillEyeCloseImage
 
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
-                    this.image = duckImage
+                    // this.image = duckImage
                     this.physic.velocity.setY(
                         this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
+
                 this.physic.update(frameTimeDelta)
+
                 if (this.physic.velocity.getY() >= 0) {
                     this.state = PLAYER_STATES.FALLING
                 }
@@ -90,7 +91,6 @@ export class Dinosaur extends Sprite {
             case PLAYER_STATES.FALLING:
                 this.physic.update(frameTimeDelta)
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
-                    this.image = duckImage
                     this.physic.velocity.setY(
                         this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
                     )
@@ -100,26 +100,28 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.RUNNING
                     this.position.setY(this.physic.land)
                     this.physic.velocity.setY(10 * this.scaleRatio)
-                    
                 }
                 break
             case PLAYER_STATES.CROUCH:
                 if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.state = PLAYER_STATES.RUNNING
+                    this.image = standingStillImage
+                    this.resetPos()
                 }
-                
+
                 this.duck(frameTimeDelta, gameSpeed)
                 this.resetPos()
                 break
         }
-         
     }
 
-
-    private resetPos() : void {
+    private resetPos(): void {
         this.width = this.image.width
         this.height = this.image.height
-        this.position = new Vec2D(this.position.getX(), this.canvas.height - this.height - 1.5 * this.scaleRatio)
+        this.position = new Vec2D(
+            this.position.getX(),
+            this.canvas.height - this.height - 1.5 * this.scaleRatio
+        )
     }
 
     render() {

@@ -10,7 +10,6 @@ import { gameManager } from './GameManager'
 
 // gameCore.start(GAME_WIDTH * getScaleRatio(), GAME_HEIGHT * getScaleRatio(), new GameScene())
 
-
 function loop(lastTime: number): void {
     const curTime = Date.now()
 
@@ -19,7 +18,6 @@ function loop(lastTime: number): void {
     lastTime = Date.now()
 
     requestAnimationFrame(() => loop(lastTime))
-
 }
 
 loop(Date.now())

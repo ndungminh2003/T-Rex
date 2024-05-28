@@ -9,6 +9,7 @@ import { getScaleRatio } from './game-engine/utilities/Utilities'
 export class GameManager {
     private static instance: GameManager
     public gameCore: GameCore
+    public gameSpeed : number
 
     constructor() {
         this.gameCore = gameCore
@@ -17,7 +18,11 @@ export class GameManager {
             GAME_HEIGHT * getScaleRatio(),
             new GameScene()
         )
-        console.log(gameCore.state)
+        this.gameSpeed = 0.7
+    }
+
+    public updateGameSpeed() : void {
+        this.gameSpeed += 0.000000001
     }
 
     public static getInstance(): GameManager {
@@ -40,7 +45,8 @@ export class GameManager {
                 this.gameCore.update(0, 0)
                 break
             case GAME_STATES.RUNNING:
-                this.gameCore.update(frameTimeDelta, gameSpeed)
+                this.updateGameSpeed()
+                this.gameCore.update(frameTimeDelta, this.gameSpeed)
                 break
             case GAME_STATES.GAME_OVER:
                 this.gameCore.state = GAME_STATES.GAME_OVER

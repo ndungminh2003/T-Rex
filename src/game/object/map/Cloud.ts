@@ -26,9 +26,9 @@ export class Cloud extends Sprite {
         this.image = cloudImage
     }
 
-    update(gameSpeed: number, frameTimeDelta: number) {
+    update(frameTimeDelta: number, gameSpeed: number) {
         let x = this.position.getX()
-        x -= gameSpeed * frameTimeDelta * this.speed //* this.scaleRatio
+        x -= gameSpeed * frameTimeDelta * this.speed * 0.5 //* this.scaleRatio
         this.position.setX(x)
     }
 

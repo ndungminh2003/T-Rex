@@ -1,9 +1,11 @@
+import { GAME_STATES } from './../../../game-engine/utilities/Config'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { ctx } from '../../../game-engine/utilities/Config'
 import { gameCore } from '../../../game-engine/game-core/GameCore'
 import { PLAYER_STATES } from '../../../game-engine/utilities/Config'
 import { Physic } from '../../../game-engine/physics/Physic'
+import { getScaleRatio } from '../../../game-engine/utilities/Utilities'
 
 const standingStillImage = new Image()
 standingStillImage.src = './assets/images/standing_still.png'
@@ -33,7 +35,7 @@ export class Dinosaur extends Sprite {
 
     constructor(scaleRatio: number, gameSpeed: number) {
         super()
-        this.scaleRatio = scaleRatio
+        this.scaleRatio = getScaleRatio()
 
         this.width = 58 //* scaleRatio
         this.height = 62 //* scaleRatio
@@ -60,6 +62,7 @@ export class Dinosaur extends Sprite {
                 ) {
                     this.state = PLAYER_STATES.JUMPING
                 } else if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
+                    this.image = duckImage
                     this.state = PLAYER_STATES.CROUCH
                 }
                 this.run(frameTimeDelta, gameSpeed)
@@ -69,7 +72,10 @@ export class Dinosaur extends Sprite {
                 this.image = standingStillEyeCloseImage
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = duckImage
-                    this.physic.velocity.setY(this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 3)
+                    this.physic.velocity.setY(
+                        this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
+                    )
+                    this.state = PLAYER_STATES.FALLING
                 }
                 this.physic.update(frameTimeDelta)
                 if (this.physic.velocity.getY() >= 0) {
@@ -79,12 +85,22 @@ export class Dinosaur extends Sprite {
 
             case PLAYER_STATES.FALLING:
                 this.physic.update(frameTimeDelta)
+                if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
+                    this.image = duckImage
+                    this.physic.velocity.setY(
+                        this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
+                    )
+                    this.state = PLAYER_STATES.FALLING
+                }
                 if (this.position.getY() >= this.physic.land) {
                     this.state = PLAYER_STATES.RUNNING
                     this.position.setY(this.physic.land)
+                    this.physic.velocity.setY(10 * this.scaleRatio)
                 }
                 break
             case PLAYER_STATES.CROUCH:
+                // this.setWidth(80)
+                // this.setHeight(83)
                 if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.state = PLAYER_STATES.RUNNING
                 }
@@ -116,14 +132,17 @@ export class Dinosaur extends Sprite {
     }
 
     duck(frameTimeDelta: number, gameSpeed: number) {
-        if (this.walkAnimationTimer <= 0) {
-            if (this.image === duckImage) {
-                this.image = duck2Image
-            } else {
-                this.image = duckImage
+        if (this.state === PLAYER_STATES.CROUCH) {
+            if (this.walkAnimationTimer <= 0) {
+                if (this.image === duckImage) {
+                    this.image = duck2Image
+                } else {
+                    this.image = duckImage
+                }
+                this.walkAnimationTimer = 200
             }
-            this.walkAnimationTimer = 200
+            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
         }
-        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
+        return
     }
 }

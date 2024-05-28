@@ -22,6 +22,7 @@ export class GameScene extends Scene {
     currentBirdIndex: number = 0
     enemySpawnInterval: number = 4000
     lastEnemySpawnTime: number = 0
+    gameSpeed: number
 
     birdSpawnPositions: Vec2D[] = [new Vec2D(30, 150), new Vec2D(100, 200), new Vec2D(50, 220)]
 
@@ -64,8 +65,6 @@ export class GameScene extends Scene {
         let scaleRatio = getScaleRatio()
         let enemy: Enemy
 
-        this.enemies = this.enemies.filter((e) => !(e instanceof Bird))
-
         if (Math.random() > 0.5) {
             enemy = new Cactus(scaleRatio, 1, 13)
         } else {
@@ -89,22 +88,7 @@ export class GameScene extends Scene {
             this.gameObjects[i].update(frameTimeDelta, gameSpeed)
         }
 
-        this.checkBirdPosition()
         this.checkCollisions()
-    }
-
-    private checkBirdPosition(): void {
-        const groundEndPosition = 800
-
-        for (let i = 0; i < this.enemies.length; i++) {
-            let enemy = this.enemies[i]
-            if (enemy instanceof Bird && enemy.getPos().getX() > groundEndPosition) {
-                this.removeGameObject(enemy)
-                this.enemies.splice(i, 1)
-                this.spawnEnemy()
-                break
-            }
-        }
     }
 
     private checkCollisions(): void {
@@ -127,12 +111,5 @@ export class GameScene extends Scene {
         this.gameObjects = []
         this.enemies = []
         this.currentBirdIndex = 0
-    }
-
-    private removeGameObject(gameObject: any): void {
-        const index = this.gameObjects.indexOf(gameObject)
-        if (index > -1) {
-            this.gameObjects.splice(index, 1)
-        }
     }
 }

@@ -17,14 +17,13 @@ export class Ground extends Sprite {
         this.position = new Vec2D(0, this.canvas.height - this.height)
 
         this.scaleRatio = scaleRatio
-        this.speed = speed
 
         this.image = groundImage
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
         this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta * this.speed //* this.scaleRatio
+            this.position.getX() - gameSpeed * frameTimeDelta //* this.scaleRatio
         )
     }
 

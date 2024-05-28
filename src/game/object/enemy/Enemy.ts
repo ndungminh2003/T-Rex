@@ -7,14 +7,13 @@ export abstract class Enemy extends Sprite {
         super()
     }
 
-    update(gameSpeed: number, frameTimeDelta: number) {
+    update(frameTimeDelta: number, gameSpeed: number) {
         this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta * 1 //* this.scaleRatio
+            this.position.getX() - gameSpeed * frameTimeDelta * 1.3 //* this.scaleRatio
         )
     }
 
     collideWith(player: Dinosaur) {
-        
         const adjustBy = 1.4
         if (
             player.getPos().getX() < this.position.getX() + this.width / adjustBy &&

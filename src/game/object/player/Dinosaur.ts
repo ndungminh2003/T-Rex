@@ -27,7 +27,7 @@ standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
 export class Dinosaur extends Sprite {
     scaleRatio: number
-    state: number
+    state: string
 
     walkAnimationTimer: number
 
@@ -74,13 +74,19 @@ export class Dinosaur extends Sprite {
                 this.image = standingStillEyeCloseImage
 
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
-                    // this.image = duckImage
                     this.physic.velocity.setY(
                         this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
 
+                if (
+                    gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN) &&
+                    gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE)
+                ) {
+                    this.image = duckImage
+                    this.state = PLAYER_STATES.CROUCH
+                }
                 this.physic.update(frameTimeDelta)
 
                 if (this.physic.velocity.getY() >= 0) {

@@ -40,7 +40,6 @@ export class GameManager {
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
                 ) {
                     this.gameCore.state = GAME_STATES.RUNNING
-                    // this.gameCore.setCurrentScene(new OverScene())
                 }
                 this.gameCore.update(0, 0)
                 break

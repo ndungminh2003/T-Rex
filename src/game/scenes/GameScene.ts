@@ -84,6 +84,10 @@ export class GameScene extends Scene {
             this.gameObjects[i].update(frameTimeDelta, gameSpeed)
         }
 
+        // if(this.player.getPos().getX() <= this.player.getPos().getX() + 10){
+        //     this.player.getPos().setX(this.player.getPos().getX() + 0.5)
+        //  }
+
         this.checkCollisions()
     }
 

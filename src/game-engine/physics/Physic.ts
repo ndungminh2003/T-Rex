@@ -17,12 +17,12 @@ export class Physic extends Component {
     }
 
     public update(frameTimeDelta: number): void {
-        this.velocity = Vec2D.add(this.velocity, new Vec2D(0, this.gravity / frameTimeDelta))
+        this.velocity = Vec2D.add(this.velocity, new Vec2D(0, this.gravity * frameTimeDelta / 320))
 
         this.gameObject.setPos(
             Vec2D.add(
                 this.gameObject.getPos(),
-                Vec2D.mul(this.velocity, this.gravity / frameTimeDelta)
+                this.velocity
             )
         )
         if (this.gameObject.getPos().getY() >= this.land) {

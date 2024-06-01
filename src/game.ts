@@ -14,7 +14,8 @@ function loop(lastTime: number): void {
     const curTime = Date.now()
 
     gameManager.render()
-    gameManager.update(curTime - lastTime, 0.6)
+    gameManager.update(curTime - lastTime, 1)
+    console.log(curTime - lastTime)
     lastTime = Date.now()
 
     requestAnimationFrame(() => loop(lastTime))

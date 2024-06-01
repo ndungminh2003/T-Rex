@@ -49,10 +49,10 @@ export const GAME_STATES = {
 }
 
 export const PLAYER_STATES = {
-    RUNNING: 1,
-    JUMPING: 2,
-    FALLING: 3,
-    CROUCH: 4,
+    RUNNING: 'running',
+    JUMPING: 'jumping',
+    FALLING: 'falling',
+    CROUCH: 'crouch',
 }
 
 export const GROUND_POSITION = new Vec2D(0, canvas.height -1050)

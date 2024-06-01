@@ -21,7 +21,7 @@ export abstract class Component extends Object {
         this.name = name
     }
 
-    public abstract update(frameTimeDelta: number): void
+    public abstract update(frameTimeDelta: number, gameSpeed : number): void
     public abstract render(frameTimeDelta: number): void
 
 }

@@ -6,29 +6,19 @@ const cloudImage = new Image()
 cloudImage.src = './assets/images/cloud.png'
 
 export class Cloud extends Sprite {
-    private scaleRatio: number
-    private speed: number
-
-    constructor(scaleRatio: number, speed: number) {
+    constructor() {
         super()
 
-        this.width = 30 * scaleRatio
-        this.height = 20 * scaleRatio
+        this.position = new Vec2D(this.canvas.width - 60, this.canvas.height - 350)
+        this.width = cloudImage.width
+        this.height = cloudImage.height
 
-        this.scaleRatio = scaleRatio
-
-        this.position = new Vec2D(
-            this.canvas.width - 40 * this.scaleRatio,
-            this.canvas.height - 250 * this.scaleRatio
-        )
-
-        this.speed = speed
         this.image = cloudImage
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
         let x = this.position.getX()
-        x -= gameSpeed * frameTimeDelta * this.speed * 0.5 //* this.scaleRatio
+        x -= gameSpeed * frameTimeDelta * gameSpeed * 0.5
         this.position.setX(x)
     }
 

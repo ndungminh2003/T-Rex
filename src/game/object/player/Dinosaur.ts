@@ -1,11 +1,11 @@
-import { GAME_STATES, GROUND_POSITION } from './../../../game-engine/utilities/Config'
+import { Collider } from './../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { ctx } from '../../../game-engine/utilities/Config'
 import { gameCore } from '../../../game-engine/game-core/GameCore'
 import { PLAYER_STATES } from '../../../game-engine/utilities/Config'
 import { Physic } from '../../../game-engine/physics/Physic'
-import { getScaleRatio } from '../../../game-engine/utilities/Utilities'
+import { Animation } from '../../../game-engine/animation/Animation'
 
 const standingStillImage = new Image()
 standingStillImage.src = './assets/images/standing_still.png'
@@ -26,32 +26,32 @@ const standingStillEyeCloseImage = new Image()
 standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
 export class Dinosaur extends Sprite {
-    scaleRatio: number
     state: string
-
-    walkAnimationTimer: number
-
     physic: Physic
+    animation: Animation
+    collider: Collider
 
-    constructor(scaleRatio: number, gameSpeed: number) {
+    constructor() {
         super()
-        this.scaleRatio = getScaleRatio()
 
-        //  this.width = 58 //* scaleRatio
-        //  this.height = 62 //* scaleRatio
         this.image = standingStillImage
         this.width = this.image.width
         this.height = this.image.height
+
         this.state = PLAYER_STATES.RUNNING
 
-        this.position = new Vec2D(
-            10 * this.scaleRatio,
-            this.canvas.height - this.height - 1.5 * scaleRatio
-        )
+        this.position = new Vec2D(10, this.canvas.height - this.height)
+        this.physic = new Physic(this)
+        this.animation = new Animation(this, this)
 
-        this.walkAnimationTimer = 200
+        this.animation.addAnimationFrame('RUNNING', dinoRun1_Image)
+        this.animation.addAnimationFrame('RUNNING', dinoRun2_Image)
 
-        this.physic = new Physic(this, scaleRatio)
+        this.animation.addAnimationFrame('CROUCH', duckImage)
+        this.animation.addAnimationFrame('CROUCH', duck2Image)
+
+        this.collider = new Collider(this)
+        
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
@@ -61,18 +61,18 @@ export class Dinosaur extends Sprite {
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
                 ) {
+                    this.image = standingStillEyeCloseImage
                     this.state = PLAYER_STATES.JUMPING
                 } else if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = duckImage
                     this.state = PLAYER_STATES.CROUCH
+                    this.resetPos()
                 }
-                this.run(frameTimeDelta, gameSpeed)
+                this.animation.play('RUNNING', frameTimeDelta, gameSpeed)
                 this.resetPos()
                 break
 
             case PLAYER_STATES.JUMPING:
-                this.image = standingStillEyeCloseImage
-
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.physic.velocity.setY(
                         this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
@@ -85,6 +85,7 @@ export class Dinosaur extends Sprite {
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE)
                 ) {
                     this.image = duckImage
+                    this.resetPos()
                     this.state = PLAYER_STATES.CROUCH
                 }
                 this.physic.update(frameTimeDelta)
@@ -103,19 +104,21 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.FALLING
                 }
                 if (this.position.getY() >= this.physic.land) {
+                    this.image = dinoRun1_Image
                     this.state = PLAYER_STATES.RUNNING
                     this.position.setY(this.physic.land)
-                    this.physic.velocity.setY(10 * this.scaleRatio)
+                    this.physic.velocity.setY(10)
                 }
                 break
+
             case PLAYER_STATES.CROUCH:
                 if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
-                    this.state = PLAYER_STATES.RUNNING
                     this.image = standingStillImage
+                    this.state = PLAYER_STATES.RUNNING
                     this.resetPos()
                 }
 
-                this.duck(frameTimeDelta, gameSpeed)
+                this.animation.play('CROUCH', frameTimeDelta, gameSpeed)
                 this.resetPos()
                 break
         }
@@ -124,10 +127,7 @@ export class Dinosaur extends Sprite {
     private resetPos(): void {
         this.width = this.image.width
         this.height = this.image.height
-        this.position = new Vec2D(
-            this.position.getX(),
-            this.canvas.height - this.height - 1.5 * this.scaleRatio
-        )
+        this.position = new Vec2D(this.position.getX(), this.canvas.height - this.height)
     }
 
     render() {
@@ -140,30 +140,18 @@ export class Dinosaur extends Sprite {
         )
     }
 
-    run(frameTimeDelta: number, gameSpeed: number) {
-        if (this.walkAnimationTimer <= 0) {
-            if (this.image === dinoRun1_Image) {
-                this.image = dinoRun2_Image
-            } else {
-                this.image = dinoRun1_Image
-            }
-            this.walkAnimationTimer = 200
-        }
-        this.walkAnimationTimer -= frameTimeDelta * gameSpeed
-    }
-
-    duck(frameTimeDelta: number, gameSpeed: number) {
-        if (this.state === PLAYER_STATES.CROUCH) {
-            if (this.walkAnimationTimer <= 0) {
-                if (this.image === duckImage) {
-                    this.image = duck2Image
-                } else {
-                    this.image = duckImage
-                }
-                this.walkAnimationTimer = 200
-            }
-            this.walkAnimationTimer -= frameTimeDelta * gameSpeed
-        }
-        return
-    }
+    // duck(frameTimeDelta: number, gameSpeed: number) {
+    //     if (this.state === PLAYER_STATES.CROUCH) {
+    //         if (this.walkAnimationTimer <= 0) {
+    //             if (this.image === duckImage) {
+    //                 this.image = duck2Image
+    //             } else {
+    //                 this.image = duckImage
+    //             }
+    //             this.walkAnimationTimer = 200
+    //         }
+    //         this.walkAnimationTimer -= frameTimeDelta * gameSpeed
+    //     }
+    //     return
+    // }
 }

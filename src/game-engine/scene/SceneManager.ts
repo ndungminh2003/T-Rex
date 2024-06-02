@@ -25,7 +25,7 @@ export class SceneManager {
         this.currentScene.load()
     }
 
-    public update(frameTimeDelta : number, gameSpeed : number): void {
+    public update(frameTimeDelta: number, gameSpeed: number): void {
         this.currentScene.update(frameTimeDelta, gameSpeed)
     }
 
@@ -33,7 +33,7 @@ export class SceneManager {
         this.currentScene.render()
     }
 
-    public getCurrentScene() : Scene {
+    public getCurrentScene(): Scene {
         return this.currentScene
     }
 }

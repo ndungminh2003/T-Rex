@@ -1,4 +1,4 @@
-import { ctx } from '../../../game-engine/utilities/Config'
+import { Animation } from './../../../game-engine/animation/Animation'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { Enemy } from './Enemy'
 
@@ -9,23 +9,23 @@ const birdImage2 = new Image()
 birdImage2.src = './assets/images/bird_2.png'
 
 export class Bird extends Enemy {
-    private flyAnimationTimer: number
-    private scaleRatio: number
-    private speed: number
+    private animation: Animation
 
-    constructor(scaleRatio: number, speed: number, position: Vec2D, depth: number) {
-        super(scaleRatio)
+    constructor(position: Vec2D, depth: number) {
+        super()
 
-        this.width = 50 //* scaleRatio
-        this.height = 50 //* scaleRatio
         this.position = position
 
-        this.scaleRatio = scaleRatio
-        this.speed = speed
+        this.width = birdImage1.width
+        this.height = birdImage1.height
+
         this.depth = depth
 
         this.image = birdImage1
-        this.flyAnimationTimer = 100
+
+        this.animation = new Animation(this, this)
+        this.animation.addAnimationFrame('FLY', birdImage1)
+        this.animation.addAnimationFrame('FLY', birdImage2)
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
@@ -34,14 +34,6 @@ export class Bird extends Enemy {
     }
 
     fly(frameTimeDelta: number, gameSpeed: number) {
-        if (this.flyAnimationTimer <= 0) {
-            if (this.image === birdImage1) {
-                this.image = birdImage2
-            } else {
-                this.image = birdImage1
-            }
-            this.flyAnimationTimer = 300
-        }
-        this.flyAnimationTimer -= frameTimeDelta * gameSpeed
+        this.animation.play('FLY', frameTimeDelta, gameSpeed)
     }
 }

@@ -2,11 +2,8 @@ import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { Enemy } from './Enemy'
 
 export class Cactus extends Enemy {
-    constructor(scaleRatio: number, speed: number, depth: number) {
-        super(scaleRatio)
-
-
-       
+    constructor(depth: number) {
+        super()
 
         let cactusImage = new Image()
         cactusImage.src =
@@ -14,14 +11,12 @@ export class Cactus extends Enemy {
 
         this.image = cactusImage
         this.width = this.image.width
-        this.height = this.image.height 
+        this.height = this.image.height
         this.position = new Vec2D(this.canvas.width * 1.5, this.canvas.height - this.height)
         this.depth = depth
     }
 
     public update(frameTimeDelta: number, gameSpeed: number): void {
-        this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta //* this.scaleRatio
-        )
+        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta)
     }
 }

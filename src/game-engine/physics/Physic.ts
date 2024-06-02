@@ -7,12 +7,12 @@ export class Physic extends Component {
     public velocity: Vec2D
     public land: number
 
-    constructor(gameObject: GameObject, scaleRatio: number) {
+    constructor(gameObject: GameObject) {
         super(gameObject)
 
-        this.gravity = 10 * scaleRatio
+        this.gravity = 20
         this.velocity = new Vec2D(0, -this.gravity)
-        this.land = this.canvas.height - this.gameObject.getHeight() - 1.5 * scaleRatio
+        this.land = this.canvas.height - this.gameObject.getHeight()
         this.name = 'Physic'
     }
 

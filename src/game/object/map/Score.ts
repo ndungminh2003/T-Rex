@@ -6,33 +6,31 @@ export class Score extends GameObject {
     score: number
     scaleRatio: number
 
-    constructor(scaleRatio: number) {
+    constructor() {
         super()
         this.score = 0
-        this.scaleRatio = scaleRatio
     }
 
-    public reset() : void {
+    public reset(): void {
         this.score = 0
     }
 
-    public getScore() : number {
+    public getScore(): number {
         return this.score
     }
 
-
-    public update(frameTimeDelta: number) : void {
+    public update(frameTimeDelta: number): void {
         this.score += frameTimeDelta * 0.01
     }
 
-    public render() : void {
+    public render(): void {
         const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY))
-        const y = 20 * this.scaleRatio
-        const fontsize = 15 * this.scaleRatio
+        const y = 20
+        const fontsize = 15
         ctx.font = `${fontsize}px serif`
         ctx.fillStyle = 'grey'
 
-        const scoreX = this.canvas.width - 60 * this.scaleRatio
+        const scoreX = this.canvas.width - 60
         const highScoreX = scoreX - 150
 
         const scorePadded = Math.floor(this.score).toString().padStart(5, '0')
@@ -42,7 +40,7 @@ export class Score extends GameObject {
         ctx.fillText(highScorePadded, highScoreX, y)
     }
 
-    public setHighScore() : void {
+    public setHighScore(): void {
         const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY))
         if (this.score > highScore) {
             localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score).toString())

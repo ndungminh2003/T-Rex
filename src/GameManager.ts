@@ -1,10 +1,8 @@
 import { gameCore } from './game-engine/game-core/GameCore'
 import { GAME_HEIGHT, GAME_STATES, GAME_WIDTH } from './game-engine/utilities/Config'
 import { GameCore } from './game-engine/game-core/GameCore'
-import { ReadyScene } from './game/scenes/ReadyScene'
 import { GameScene } from './game/scenes/GameScene'
 import { OverScene } from './game/scenes/OverScene'
-import { getScaleRatio } from './game-engine/utilities/Utilities'
 
 export class GameManager {
     private static instance: GameManager
@@ -13,11 +11,7 @@ export class GameManager {
 
     constructor() {
         this.gameCore = gameCore
-        this.gameCore.start(
-            GAME_WIDTH * getScaleRatio(),
-            GAME_HEIGHT * getScaleRatio(),
-            new GameScene()
-        )
+        this.gameCore.start(GAME_WIDTH, GAME_HEIGHT, new GameScene())
         this.gameSpeed = 0.7
     }
 
@@ -56,11 +50,16 @@ export class GameManager {
                 ) {
                     this.gameCore.state = GAME_STATES.RUNNING
                     this.gameCore.sceneManager.loadScene(new GameScene())
+                    this.resetGameSpeed()
                 }
 
                 this.gameCore.update(0, 0)
                 break
         }
+    }
+
+    public resetGameSpeed(): void {
+        this.gameSpeed = 0.7
     }
 
     public render() {

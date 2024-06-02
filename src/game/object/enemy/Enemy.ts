@@ -1,16 +1,19 @@
+import { Collider } from '../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { ctx } from '../../../game-engine/utilities/Config'
 import { Dinosaur } from '../player/Dinosaur'
 
 export abstract class Enemy extends Sprite {
-    constructor(scaleRatio: number) {
+    collider: Collider
+
+    constructor() {
         super()
+
+        this.collider = new Collider(this)
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
-        this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta * 1.3 //* this.scaleRatio
-        )
+        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta * 1.3)
     }
 
     collideWith(player: Dinosaur) {

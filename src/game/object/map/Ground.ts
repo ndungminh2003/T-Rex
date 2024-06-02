@@ -6,25 +6,18 @@ const groundImage = new Image()
 groundImage.src = './assets/images/ground.png'
 
 export class Ground extends Sprite {
-    private scaleRatio: number
-    private speed: number
-
-    constructor(scaleRatio: number, speed: number) {
+    constructor() {
         super()
 
-        this.width = 2400 //* scaleRatio
-        this.height = 24 //* scaleRatio
+        this.width = groundImage.width
+        this.height = groundImage.height
         this.position = new Vec2D(0, this.canvas.height - this.height)
-
-        this.scaleRatio = scaleRatio
 
         this.image = groundImage
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {
-        this.position.setX(
-            this.position.getX() - gameSpeed * frameTimeDelta //* this.scaleRatio
-        )
+        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta)
     }
 
     render() {

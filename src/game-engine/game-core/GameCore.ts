@@ -9,7 +9,7 @@ import { ReadyScene } from '../../game/scenes/ReadyScene'
 export class GameCore {
     private static instance: GameCore
     public inputManager: InputManager
-    public sceneManager: SceneManager
+    // public sceneManager: SceneManager
     public canvas: Canvas
     public currentScene: Scene
     public state: number
@@ -19,7 +19,7 @@ export class GameCore {
         this.setCurrentScene(new ReadyScene())
         this.canvas = Canvas.getInstance()
         this.inputManager = InputManager.getInstance()
-        this.sceneManager = SceneManager.getInstance()
+        // this.sceneManager = SceneManager.getInstance()
     }
 
     //singleton pattern
@@ -33,7 +33,7 @@ export class GameCore {
     public start(w: number, h: number, startScene: Scene): void {
         this.canvas.init(w, h)
         this.inputManager.start()
-        this.sceneManager.loadScene(startScene)
+        this.currentScene.load()
     }
 
     public clearScreen(): void {
@@ -42,12 +42,18 @@ export class GameCore {
     }
 
     public update(frameTimeDelta: number, gameSpeed: number): void {
-        this.sceneManager.update(frameTimeDelta, gameSpeed)
+        this.currentScene.update(frameTimeDelta, gameSpeed)
     }
 
     public render(): void {
         this.clearScreen()
-        this.sceneManager.render()
+        this.currentScene.render()
+    }
+
+    public changeScene(scene: Scene): void {
+        this.currentScene.unload()
+        this.setCurrentScene(scene)
+        this.currentScene.load()
     }
 
     public getCurrentScene(): Scene {

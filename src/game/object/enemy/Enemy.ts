@@ -1,9 +1,10 @@
 import { Collider } from '../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { ctx } from '../../../game-engine/utilities/Config'
-import { Dinosaur } from '../player/Dinosaur'
+import { IEnemy } from '../../../types/IEnemy'
 
-export abstract class Enemy extends Sprite {
+
+export abstract class Enemy extends Sprite implements IEnemy {
     collider: Collider
 
     constructor() {
@@ -16,19 +17,6 @@ export abstract class Enemy extends Sprite {
         this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta * 1.3)
     }
 
-    collideWith(player: Dinosaur) {
-        const adjustBy = 1.4
-        if (
-            player.getPos().getX() < this.position.getX() + this.width / adjustBy &&
-            player.getPos().getX() + player.getWidth() / adjustBy > this.position.getX() &&
-            player.getPos().getY() < this.position.getY() + this.height / adjustBy &&
-            player.getPos().getY() + player.getHeight() / adjustBy > this.position.getY()
-        ) {
-            return true
-        } else {
-            return false
-        }
-    }
 
     render() {
         ctx.drawImage(

@@ -4,6 +4,7 @@ import { Enemy } from './Enemy'
 export class Cactus extends Enemy {
     constructor(depth: number) {
         super()
+        this.depth = depth
 
         let cactusImage = new Image()
         cactusImage.src =
@@ -13,7 +14,6 @@ export class Cactus extends Enemy {
         this.width = this.image.width
         this.height = this.image.height
         this.position = new Vec2D(this.canvas.width * 1.5, this.canvas.height - this.height)
-        this.depth = depth
     }
 
     public update(frameTimeDelta: number, gameSpeed: number): void {

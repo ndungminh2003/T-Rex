@@ -51,7 +51,6 @@ export class Dinosaur extends Sprite {
         this.animation.addAnimationFrame('CROUCH', duck2Image)
 
         this.collider = new Collider(this)
-        
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {

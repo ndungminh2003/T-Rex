@@ -1,6 +1,6 @@
 import { GameCore } from '../game-core/GameCore'
 import { gameCore } from '../game-core/GameCore'
-import { Canvas } from '../canvas/Canvas'
+
 
 export abstract class Object {
     protected isActive: boolean

@@ -16,5 +16,5 @@ export abstract class Sprite extends GameObject {
     }
 
     public abstract render(): void
-    public abstract update(gameSpeed: number, frameTimeDelta: number): void
+    public abstract update(frameTimeDelta: number, gameSpeed: number): void
 }

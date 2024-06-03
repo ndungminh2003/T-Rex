@@ -6,10 +6,10 @@ const cloudImage = new Image()
 cloudImage.src = './assets/images/cloud.png'
 
 export class Cloud extends Sprite {
-    constructor() {
+    constructor(pos: Vec2D) {
         super()
 
-        this.position = new Vec2D(this.canvas.width - 60, this.canvas.height - 350)
+        this.position = pos
         this.width = cloudImage.width
         this.height = cloudImage.height
 

@@ -40,12 +40,12 @@ export class Collider extends Component {
     }
 
     public isCollidingWith(other: Collider): boolean {
-        const adjustBy = 1.4
+    
         return (
-            this.pos.getX() < other.getPosition().getX() + other.getWidth() / adjustBy &&
-            this.pos.getX() + this.width / adjustBy > other.getPosition().getX() &&
-            this.pos.getY() < other.getPosition().getY() + other.getHeight() / adjustBy &&
-            this.pos.getY() + this.height / adjustBy > other.getPosition().getY()
+            other.getPosition().getX() < this.pos.getX() + this.width &&
+            other.getPosition().getX() + other.getWidth() > this.pos.getX() &&
+            other.getPosition().getY() < this.pos.getY() + this.height &&
+            other.getHeight() + other.getPosition().getY() > this.pos.getY()
         )
     }
 

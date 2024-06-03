@@ -58,8 +58,7 @@ export class Number extends Sprite {
     update(frameTimeDelta: number, gameSpeed: number) {
        
         this.incrementCounter += frameTimeDelta * gameSpeed * 0.02; // Adjust this value to control speed
-        console.log(gameSpeed)
-        
+    
         if (this.incrementCounter >= 1) {
             this.incrementCounter = 0; 
             this.num += 1;

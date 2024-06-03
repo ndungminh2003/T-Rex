@@ -139,18 +139,4 @@ export class Dinosaur extends Sprite {
         )
     }
 
-    // duck(frameTimeDelta: number, gameSpeed: number) {
-    //     if (this.state === PLAYER_STATES.CROUCH) {
-    //         if (this.walkAnimationTimer <= 0) {
-    //             if (this.image === duckImage) {
-    //                 this.image = duck2Image
-    //             } else {
-    //                 this.image = duckImage
-    //             }
-    //             this.walkAnimationTimer = 200
-    //         }
-    //         this.walkAnimationTimer -= frameTimeDelta * gameSpeed
-    //     }
-    //     return
-    // }
 }

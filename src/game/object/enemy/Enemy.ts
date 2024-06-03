@@ -5,7 +5,7 @@ import { IEnemy } from '../../../types/IEnemy'
 
 
 export abstract class Enemy extends Sprite implements IEnemy {
-    collider: Collider
+    protected collider: Collider
 
     constructor() {
         super()

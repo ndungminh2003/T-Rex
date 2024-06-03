@@ -52,6 +52,6 @@ export class GameScene extends Scene {
     }
 
     public unload(): void {
-        this.gameObjects = []
+        // this.gameObjects = []
     }
 }

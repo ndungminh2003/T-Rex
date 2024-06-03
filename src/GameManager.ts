@@ -13,15 +13,15 @@ export class GameManager {
     private static instance: GameManager
     public gameCore: GameCore
     public gameSpeed: number
-    private timeSinceLastEnemy: number // Thời gian kể từ khi tạo vật cản cuối cùng
-    private minTimeBetweenEnemies: number // Thời gian tối thiểu giữa hai lần tạo vật cản (ms)
+    private timeSinceLastEnemy: number
+    private minTimeBetweenEnemies: number
 
     private constructor() {
         this.gameCore = gameCore
         this.gameCore.start(GAME_WIDTH, GAME_HEIGHT, new GameScene())
         this.gameSpeed = 0.7
         this.timeSinceLastEnemy = 0
-        this.minTimeBetweenEnemies = 3000 // Đặt thời gian tối thiểu giữa hai lần tạo vật cản là 3 giây
+        this.minTimeBetweenEnemies = 3000
     }
 
     public static getInstance(): GameManager {
@@ -54,18 +54,15 @@ export class GameManager {
                 this.updateGameSpeed()
                 this.gameCore.update(frameTimeDelta, this.gameSpeed)
 
-                // Tính toán thời gian kể từ khi tạo vật cản cuối cùng
                 this.timeSinceLastEnemy += frameTimeDelta
-                this.gameCore.getCurrentScene().getGameObjects() // Lấy danh sách các game object trong scene
+                this.gameCore.getCurrentScene().getGameObjects()
                 const player = this.gameCore
                     .getCurrentScene()
                     .getGameObjects()
-                    .find((gameObject) => gameObject instanceof Dinosaur) as Dinosaur // Tìm đối tượng Dinosaur trong danh sách
-                const playerCollider = player.getComponent('Collider') as Collider // Lấy collider của Dinosaur
+                    .find((gameObject) => gameObject instanceof Dinosaur) as Dinosaur
+                const playerCollider = player.getComponent('Collider') as Collider
 
                 if (playerCollider) {
-                    // Kiểm tra va chạm giữa Dinosaur và vật cản
-
                     enemyManager.enemies.forEach((enemy) => {
                         const enemyCollider = enemy.getComponent('Collider') as Collider
                         enemyCollider.setHeight(enemy.getHeight())
@@ -78,15 +75,17 @@ export class GameManager {
                         if (playerCollider.isCollidingWith(enemyCollider)) {
                             this.gameCore.state = GAME_STATES.GAME_OVER
                             player.setImage(die_Image)
-                            this.gameCore.changeScene(new OverScene(this.gameCore.getCurrentScene().getGameObjects()))
+                            this.gameCore.changeScene(
+                                new OverScene(this.gameCore.getCurrentScene().getGameObjects())
+                            )
+                            this.gameCore.getCurrentScene().unload()
                         }
                     })
                 }
 
-                // Nếu đã đủ thời gian giữa hai lần tạo vật cản, thì tạo một vật cản mới
                 if (this.timeSinceLastEnemy >= this.minTimeBetweenEnemies) {
                     enemyManager.generateEnemy(this.gameSpeed)
-                    this.timeSinceLastEnemy = 0 // Đặt lại thời gian đếm
+                    this.timeSinceLastEnemy = 0
                 }
 
                 enemyManager.update(frameTimeDelta, this.gameSpeed)

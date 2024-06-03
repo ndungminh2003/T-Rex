@@ -5,9 +5,7 @@ export abstract class Scene {
     protected gameObjects: Array<GameObject> = []
     protected gameCore: GameCore
 
-    constructor() {
-
-    }
+    constructor() {}
 
     public addGameObject(gameObject: GameObject): void {
         this.gameObjects.push(gameObject)

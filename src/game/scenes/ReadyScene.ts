@@ -45,7 +45,5 @@ export class ReadyScene extends Scene {
         }
     }
 
-    public unload(): void {
-        this.gameObjects = []
-    }
+    public unload(): void {}
 }

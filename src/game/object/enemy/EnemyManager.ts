@@ -7,13 +7,13 @@ import { canvas } from '../../../game-engine/utilities/Config'
 export class EnemyManager {
     private static instance: EnemyManager
     public enemies: Enemy[]
-    private maxEnemies: number // Số lượng tối đa vật cản được duy trì
-    private currentEnemies: number // Số lượng vật cản hiện tại
+    private maxEnemies: number 
+    private currentEnemies: number 
 
     private constructor() {
         this.enemies = []
-        this.maxEnemies = 3 // Số lượng tối đa vật cản được duy trì
-        this.currentEnemies = 0 // Khởi tạo biến đếm số lượng vật cản hiện tại
+        this.maxEnemies = 5 
+        this.currentEnemies = 0 
     }
 
     public static getInstance(): EnemyManager {
@@ -25,18 +25,17 @@ export class EnemyManager {
 
     public generateEnemy(gameSpeed: number): void {
         if (this.currentEnemies >= this.maxEnemies) {
-            // Nếu đã đạt tới số lượng tối đa, xóa vật cản đầu tiên và thêm vật cản mới vào cuối
             this.enemies.shift()
             this.currentEnemies--
         }
 
-        // Tạo con chim ở vị trí ngẫu nhiên
-        const birdPosition = new Vec2D(canvas.width, Math.random() * 400)
+        // create bird
+        const birdPosition = new Vec2D(canvas.width, Math.random() * 500)
         const bird = new Bird(birdPosition, gameSpeed)
         this.enemies.push(bird)
         this.currentEnemies++
 
-        // Nếu chưa tạo cây xương rồng, tạo cây xương rồng ở vị trí cố định
+        // create cactus
         if (!this.enemies.some((enemy) => enemy instanceof Cactus)) {
             const cactus = new Cactus(gameSpeed)
             this.enemies.push(cactus)
@@ -58,14 +57,14 @@ export class EnemyManager {
 
     public clearEnemies(): void {
         this.enemies = []
-        this.currentEnemies = 0 // Đặt lại biến đếm khi xóa tất cả vật cản
+        this.currentEnemies = 0 
     }
 
     public removeEnemy(enemy: Enemy): void {
         const enemyIndex = this.enemies.indexOf(enemy)
         if (enemyIndex > -1) {
             this.enemies.splice(enemyIndex, 1)
-            this.currentEnemies-- // Giảm biến đếm khi xóa một vật cản
+            this.currentEnemies-- 
         }
     }
 

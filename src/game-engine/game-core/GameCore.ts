@@ -1,5 +1,4 @@
 import { InputManager } from '../input/InputManager'
-import { SceneManager } from '../scene/SceneManager'
 import { Scene } from '../scene/Scene'
 import { GAME_STATES } from '../utilities/Config'
 import { Canvas } from '../canvas/Canvas'
@@ -9,7 +8,7 @@ import { ReadyScene } from '../../game/scenes/ReadyScene'
 export class GameCore {
     private static instance: GameCore
     public inputManager: InputManager
-    // public sceneManager: SceneManager
+
     public canvas: Canvas
     public currentScene: Scene
     public state: number
@@ -19,7 +18,6 @@ export class GameCore {
         this.setCurrentScene(new ReadyScene())
         this.canvas = Canvas.getInstance()
         this.inputManager = InputManager.getInstance()
-        // this.sceneManager = SceneManager.getInstance()
     }
 
     //singleton pattern
@@ -50,6 +48,7 @@ export class GameCore {
         this.currentScene.render()
     }
 
+    // state pattern
     public changeScene(scene: Scene): void {
         this.currentScene.unload()
         this.setCurrentScene(scene)

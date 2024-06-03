@@ -20,16 +20,6 @@ export class Cloud extends Sprite {
         let x = this.position.getX()
         x -= gameSpeed * frameTimeDelta * gameSpeed * 0.5
         this.position.setX(x)
-    }
-
-    render() {
-        ctx.drawImage(
-            this.image,
-            this.position.getX(),
-            this.position.getY(),
-            this.width,
-            this.height
-        )
 
         if (this.position.getX() <= -this.width) {
             let x = this.width + window.innerWidth

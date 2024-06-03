@@ -28,7 +28,7 @@ export class Bird extends Enemy implements IFlyAbleEnemy {
 
     public update(frameTimeDelta: number, gameSpeed: number) {
         this.fly(frameTimeDelta, gameSpeed)
-        super.update(frameTimeDelta, gameSpeed)
+        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta * 1.3)
     }
 
     public fly(frameTimeDelta: number, gameSpeed: number){

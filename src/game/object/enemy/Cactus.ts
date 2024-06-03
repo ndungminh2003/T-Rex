@@ -18,5 +18,9 @@ export class Cactus extends Enemy {
 
     public update(frameTimeDelta: number, gameSpeed: number): void {
         this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta)
+
+        if (this.getPos().getX() <= -this.width) {
+            this.getPos().setX(this.width + window.innerWidth)
+        }
     }
 }

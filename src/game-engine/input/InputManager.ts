@@ -47,6 +47,6 @@ export class InputManager {
 
     handleKeyUp(event: KeyboardEvent): void {
         this.keyEvent.keyUp[event.which] = true
-        delete this.keyEvent.keyDown[event.which]  
+        delete this.keyEvent.keyDown[event.which]
     }
 }

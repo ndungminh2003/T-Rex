@@ -14,16 +14,13 @@ export class Digit extends Sprite {
         this.setDigit(digit) // Initialize image source
     }
 
-    public setDigit(digit: number) {
+    public setDigit(digit: number) : void {
         this.digit = digit
         this.image.src = `./assets/images/number/${this.digit}_digit.png`
     }
 
-    update(gameSpeed: number, frameTimeDelta: number) {
+    update(gameSpeed: number, frameTimeDelta: number) : void {
         throw new Error('Method not implemented.')
     }
 
-    render() {
-        ctx.drawImage(this.image, this.position.getX(), this.position.getY())
-    }
 }

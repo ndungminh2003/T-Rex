@@ -40,7 +40,6 @@ export class Collider extends Component {
     }
 
     public isCollidingWith(other: Collider): boolean {
-    
         return (
             other.getPosition().getX() < this.pos.getX() + this.width &&
             other.getPosition().getX() + other.getWidth() > this.pos.getX() &&

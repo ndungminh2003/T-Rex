@@ -1,4 +1,5 @@
 import { GameObject } from '../components/GameObject'
+import { ctx } from '../utilities/Config'
 
 export abstract class Sprite extends GameObject {
     protected image: HTMLImageElement
@@ -15,6 +16,9 @@ export abstract class Sprite extends GameObject {
         this.image = image
     }
 
-    public abstract render(): void
+    public render(): void {
+        ctx.drawImage(this.image, this.position.getX(), this.position.getY())
+    }
+
     public abstract update(frameTimeDelta: number, gameSpeed: number): void
 }

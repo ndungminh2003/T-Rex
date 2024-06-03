@@ -21,7 +21,5 @@ export class Character extends Sprite {
     update(gameSpeed: number, frameTimeDelta: number) {
         throw new Error('Method not implemented.')
     }
-    render() {
-        ctx.drawImage(this.image, this.position.getX(), this.position.getY())
-    }
+
 }

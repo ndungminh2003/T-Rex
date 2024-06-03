@@ -1,3 +1,4 @@
+import { DinosaurController } from './DinosaurController'
 import { Collider } from './../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
@@ -26,14 +27,16 @@ const standingStillEyeCloseImage = new Image()
 standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
 export class Dinosaur extends Sprite {
-    state: string
-    physic: Physic
-    animation: Animation
-    collider: Collider
+    protected state: string
+    protected physic: Physic
+    protected animation: Animation
+    protected collider: Collider
+    protected dinosaurController: DinosaurController
 
     constructor() {
         super()
 
+        // this.dinosaurController = dinosaurController
         this.image = standingStillImage
         this.width = this.image.width
         this.height = this.image.height
@@ -53,28 +56,30 @@ export class Dinosaur extends Sprite {
         this.collider = new Collider(this)
     }
 
-    update(frameTimeDelta: number, gameSpeed: number) {
+    // state machine
+    public update(frameTimeDelta: number, gameSpeed: number): void {
         switch (this.state) {
             case PLAYER_STATES.RUNNING:
+                this.animation.play('RUNNING', frameTimeDelta, gameSpeed)
                 if (
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE) ||
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.UP)
                 ) {
                     this.image = standingStillEyeCloseImage
                     this.state = PLAYER_STATES.JUMPING
+                    this.physic.velocity.setY(-20)
                 } else if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = duckImage
                     this.state = PLAYER_STATES.CROUCH
                     this.resetPos()
                 }
-                this.animation.play('RUNNING', frameTimeDelta, gameSpeed)
                 this.resetPos()
                 break
 
             case PLAYER_STATES.JUMPING:
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.physic.velocity.setY(
-                        this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
+                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 10
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
@@ -98,15 +103,13 @@ export class Dinosaur extends Sprite {
                 this.physic.update(frameTimeDelta)
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.physic.velocity.setY(
-                        this.physic.velocity.getY() + (this.physic.gravity * frameTimeDelta) / 60
+                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 10
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
                 if (this.position.getY() >= this.physic.land) {
                     this.image = dinoRun1_Image
                     this.state = PLAYER_STATES.RUNNING
-                    this.position.setY(this.physic.land)
-                    this.physic.velocity.setY(10)
                 }
                 break
 
@@ -123,20 +126,9 @@ export class Dinosaur extends Sprite {
         }
     }
 
-    private resetPos(): void {
+    protected resetPos(): void {
         this.width = this.image.width
         this.height = this.image.height
         this.position = new Vec2D(this.position.getX(), this.canvas.height - this.height)
     }
-
-    render() {
-        ctx.drawImage(
-            this.image,
-            this.position.getX(),
-            this.position.getY(),
-            this.width,
-            this.height
-        )
-    }
-
 }

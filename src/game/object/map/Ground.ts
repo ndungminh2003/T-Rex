@@ -18,6 +18,9 @@ export class Ground extends Sprite {
 
     update(frameTimeDelta: number, gameSpeed: number) {
         this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta)
+        if (this.position.getX() <= -this.width) {
+            this.position.setX(0)
+        }
     }
 
     render() {
@@ -35,9 +38,5 @@ export class Ground extends Sprite {
             this.width,
             this.height
         )
-
-        if (this.position.getX() <= -this.width) {
-            this.position.setX(0)
-        }
     }
 }

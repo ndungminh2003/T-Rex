@@ -1,3 +1,4 @@
+// import { DinosaurManager } from './game/object/player/DinosaurManager'
 import { Collider } from './game-engine/physics/Collider'
 import { gameCore, GameCore } from './game-engine/game-core/GameCore'
 import { GAME_HEIGHT, GAME_STATES, GAME_WIDTH } from './game-engine/utilities/Config'
@@ -74,7 +75,7 @@ export class GameManager {
 
                         if (playerCollider.isCollidingWith(enemyCollider)) {
                             this.gameCore.state = GAME_STATES.GAME_OVER
-                            player.setImage(die_Image)
+                            // player.getCurrentState().setImage(die_Image)
                             this.gameCore.changeScene(
                                 new OverScene(this.gameCore.getCurrentScene().getGameObjects())
                             )

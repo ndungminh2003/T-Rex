@@ -1,4 +1,5 @@
 import { canvas } from './../../game-engine/utilities/Config'
+// import { DinosaurManager } from '../object/player/DinosaurManager'
 import { Dinosaur } from '../object/player/Dinosaur'
 import { Ground } from '../object/map/Ground'
 import { Score } from '../object/map/Score'

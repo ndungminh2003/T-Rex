@@ -5,8 +5,8 @@ function loop(lastTime: number): void {
 
     gameManager.render()
     gameManager.update(curTime - lastTime)
-
     lastTime = Date.now()
+
     requestAnimationFrame(() => loop(lastTime))
 }
 

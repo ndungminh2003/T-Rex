@@ -1,12 +1,11 @@
-import { DinosaurController } from './DinosaurController'
+// import { DinosaurManager } from './DinosaurManager'
 import { Collider } from './../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
-import { ctx } from '../../../game-engine/utilities/Config'
-import { gameCore } from '../../../game-engine/game-core/GameCore'
 import { PLAYER_STATES } from '../../../game-engine/utilities/Config'
 import { Physic } from '../../../game-engine/physics/Physic'
 import { Animation } from '../../../game-engine/animation/Animation'
+import { gameCore } from '../../../game-engine/game-core/GameCore'
 
 const standingStillImage = new Image()
 standingStillImage.src = './assets/images/standing_still.png'
@@ -28,15 +27,16 @@ standingStillEyeCloseImage.src = './assets/images/standing_still_eye_closed.png'
 
 export class Dinosaur extends Sprite {
     protected state: string
+
     protected physic: Physic
     protected animation: Animation
     protected collider: Collider
-    protected dinosaurController: DinosaurController
+    // protected dinosaurManager: DinosaurManager
 
     constructor() {
         super()
+        // this.dinosaurManager = dinosaurManager
 
-        // this.dinosaurController = dinosaurController
         this.image = standingStillImage
         this.width = this.image.width
         this.height = this.image.height
@@ -67,7 +67,7 @@ export class Dinosaur extends Sprite {
                 ) {
                     this.image = standingStillEyeCloseImage
                     this.state = PLAYER_STATES.JUMPING
-                    this.physic.velocity.setY(-20)
+                    this.physic.velocity.setY(-1.2)
                 } else if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = duckImage
                     this.state = PLAYER_STATES.CROUCH
@@ -75,15 +75,13 @@ export class Dinosaur extends Sprite {
                 }
                 this.resetPos()
                 break
-
             case PLAYER_STATES.JUMPING:
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.physic.velocity.setY(
-                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 10
+                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 2
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
-
                 if (
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN) &&
                     gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.SPACE)
@@ -93,17 +91,15 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.CROUCH
                 }
                 this.physic.update(frameTimeDelta)
-
                 if (this.physic.velocity.getY() >= 0) {
                     this.state = PLAYER_STATES.FALLING
                 }
                 break
-
             case PLAYER_STATES.FALLING:
                 this.physic.update(frameTimeDelta)
                 if (gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.physic.velocity.setY(
-                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 10
+                        this.physic.velocity.getY() + this.physic.gravity * frameTimeDelta * 2
                     )
                     this.state = PLAYER_STATES.FALLING
                 }
@@ -112,18 +108,21 @@ export class Dinosaur extends Sprite {
                     this.state = PLAYER_STATES.RUNNING
                 }
                 break
-
             case PLAYER_STATES.CROUCH:
                 if (!gameCore.inputManager.hasKeyDown(gameCore.inputManager.keyCode.DOWN)) {
                     this.image = standingStillImage
                     this.state = PLAYER_STATES.RUNNING
                     this.resetPos()
                 }
-
                 this.animation.play('CROUCH', frameTimeDelta, gameSpeed)
                 this.resetPos()
                 break
         }
+        return
+    }
+
+    public getPhysic(): Physic {
+        return this.physic
     }
 
     protected resetPos(): void {

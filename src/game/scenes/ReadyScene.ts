@@ -1,7 +1,7 @@
-import { Dinosaur } from '../object/player/Dinosaur'
+import { Dinosaur } from './../object/player/Dinosaur';
+// import { DinosaurManager } from '../object/player/DinosaurManager'
 import { Ground } from './../object/map/Ground'
 import { Scene } from '../../game-engine/scene/Scene'
-
 import { Cloud } from '../object/map/Cloud'
 import { canvas } from '../../game-engine/utilities/Config'
 import { Vec2D } from '../../game-engine/utilities/Vec2D'

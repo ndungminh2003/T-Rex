@@ -1,6 +1,6 @@
 import { Collider } from '../../../game-engine/physics/Collider'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
-import { ctx } from '../../../game-engine/utilities/Config'
+
 import { IEnemy } from '../../../types/IEnemy'
 
 export abstract class Enemy extends Sprite implements IEnemy {

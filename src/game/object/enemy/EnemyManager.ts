@@ -7,13 +7,13 @@ import { canvas } from '../../../game-engine/utilities/Config'
 export class EnemyManager {
     private static instance: EnemyManager
     public enemies: Enemy[]
-    private maxEnemies: number 
-    private currentEnemies: number 
+    private maxEnemies: number
+    private currentEnemies: number
 
     private constructor() {
         this.enemies = []
-        this.maxEnemies = 5 
-        this.currentEnemies = 0 
+        this.maxEnemies = 5
+        this.currentEnemies = 0
     }
 
     public static getInstance(): EnemyManager {
@@ -30,7 +30,13 @@ export class EnemyManager {
         }
 
         // create bird
-        const birdPosition = new Vec2D(canvas.width, Math.random() * 500)
+
+        let y = Math.random() * 600 
+        while (y <= 150 || y >= 520) {
+            y = Math.random() * 600
+        }
+
+        const birdPosition = new Vec2D(canvas.width, y)
         const bird = new Bird(birdPosition, gameSpeed)
         this.enemies.push(bird)
         this.currentEnemies++
@@ -49,22 +55,22 @@ export class EnemyManager {
             enemy.update(frameTimeDelta, gameSpeed)
 
             if (enemy.getPos().getX() < -enemy.getWidth()) {
-                this.removeEnemy(enemy) 
-                i-- 
+                this.removeEnemy(enemy)
+                i--
             }
         }
     }
 
     public clearEnemies(): void {
         this.enemies = []
-        this.currentEnemies = 0 
+        this.currentEnemies = 0
     }
 
     public removeEnemy(enemy: Enemy): void {
         const enemyIndex = this.enemies.indexOf(enemy)
         if (enemyIndex > -1) {
             this.enemies.splice(enemyIndex, 1)
-            this.currentEnemies-- 
+            this.currentEnemies--
         }
     }
 

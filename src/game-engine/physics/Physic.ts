@@ -17,8 +17,7 @@ export class Physic extends Component {
     }
 
     public update(frameTimeDelta: number): void {
-        console.log(this.gravity * frameTimeDelta)
-
+    
         this.velocity = Vec2D.add(this.velocity, new Vec2D(0, this.gravity * frameTimeDelta))
 
         this.gameObject.setPos(

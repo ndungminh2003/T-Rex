@@ -1,21 +1,18 @@
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 
-const cloudImage = new Image()
-cloudImage.src = './assets/images/cloud.png'
+const sunImage = new Image()
+sunImage.src = './assets/images/sun.png'
 
-export class Cloud extends Sprite {
-
+export class Sun extends Sprite {
     velocity: Vec2D
     constructor(pos: Vec2D, velocity: Vec2D) {
-
         super()
         this.velocity = velocity
         this.position = pos
-        this.width = cloudImage.width
-        this.height = cloudImage.height
-        this.image = cloudImage
-
+        this.width = sunImage.width
+        this.height = sunImage.height
+        this.image = sunImage
     }
 
     update(frameTimeDelta: number, gameSpeed: number) {

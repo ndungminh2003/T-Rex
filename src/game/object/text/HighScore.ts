@@ -18,7 +18,9 @@ export class HighScore extends Sprite {
         this.highScore = Number(localStorage.getItem(HIGH_SCORE_KEY)) || 0 
     }
 
-    update(frameTimeDelta: number, gameSpeed: number) {}
+    update(frameTimeDelta: number, gameSpeed: number) {
+        
+    }
 
     render() {
         this.hChar.render()

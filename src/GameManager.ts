@@ -32,7 +32,7 @@ export class GameManager {
     }
 
     public updateGameSpeed(): void {
-        this.gameSpeed += 0.0001
+        this.gameSpeed += 0.00001
     }
 
     public update(frameTimeDelta: number): void {
@@ -75,6 +75,7 @@ export class GameManager {
                         if (playerCollider.isCollidingWith(enemyCollider)) {
                             this.gameCore.state = GAME_STATES.GAME_OVER
                             player.setImage(die_Image)
+                            player.resetPos()
                             this.gameCore.changeScene(
                                 new OverScene(this.gameCore.getCurrentScene().getGameObjects())
                             )

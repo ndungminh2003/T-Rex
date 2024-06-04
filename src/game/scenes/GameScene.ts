@@ -34,7 +34,7 @@ export class GameScene extends Scene {
         this.cloud3 = new Cloud(new Vec2D(canvas.width - 200, 130), new Vec2D(-0.9, 0))
         this.cloud1 = new Cloud(new Vec2D(canvas.width - 1200, 180), new Vec2D(-0.6, 0))
         this.cloud2 = new Cloud(new Vec2D(canvas.width - 500, 220), new Vec2D(-0.3, 0))
-        this.sun = new Sun(new Vec2D(canvas.width - 700, 80), new Vec2D(-2, 0))
+        this.sun = new Sun(new Vec2D(canvas.width - 700, 80), new Vec2D(-0.01, 0))
         this.highScore = new HighScore(new Vec2D(canvas.width - 400, 50))
 
         this.addGameObject(this.sun)

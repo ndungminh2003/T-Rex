@@ -20,7 +20,7 @@ export class Sun extends Sprite {
         // x -= gameSpeed * frameTimeDelta * gameSpeed * 0.5 + this.velocity.getX()
         // this.position.setX(x)
 
-        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta * 0.5 + this.velocity.getX())
+        this.position.setX(this.position.getX() - gameSpeed * frameTimeDelta * 0.1 + this.velocity.getX())
         console.log(this.position.getX())
         if (this.position.getX() <= -this.width) {
             let x = this.width + window.innerWidth

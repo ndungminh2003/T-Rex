@@ -12,7 +12,7 @@ export class EnemyManager {
 
     private constructor() {
         this.enemies = []
-        this.maxEnemies = 7
+        this.maxEnemies = 6
         this.currentEnemies = 0
     }
 
@@ -24,14 +24,9 @@ export class EnemyManager {
     }
 
     public generateEnemy(gameSpeed: number): void {
-
-        if (this.currentEnemies >= this.maxEnemies) {
-            this.enemies.shift()
-            this.currentEnemies--
-        }
-
         // create bird
-        let y = Math.random() * 600 
+        
+        let y = Math.random() * 600
         while (y <= 150 || y >= 520) {
             y = Math.random() * 600
         }
@@ -40,9 +35,10 @@ export class EnemyManager {
         const bird = new Bird(birdPosition, gameSpeed)
         this.enemies.push(bird)
         this.currentEnemies++
-        
+
         // create cactus
-        if (!this.enemies.some((enemy) => enemy instanceof Cactus)) {
+
+        if (y <= 400) {
             const cactus = new Cactus(gameSpeed)
             this.enemies.push(cactus)
             this.currentEnemies++

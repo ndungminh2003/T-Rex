@@ -5,6 +5,7 @@ import { Dinosaur } from '../../object/player/Dinosaur'
 import { Collider } from '../../../game-engine/physics/Collider'
 import { Over } from './Over'
 import { OverScene } from '../../scenes/OverScene'
+import { CourchState } from '../../object/player/state/CourchState'
 
 const die_Image = new Image()
 die_Image.src = './assets/images/die.png'
@@ -38,6 +39,9 @@ export class Playing extends State {
 
                 if (playerCollider.isCollidingWith(enemyCollider)) {
                     player.setImage(die_Image)
+                    if (player.getCurrentState() instanceof CourchState) {
+                        player.resetPos()
+                    }
                     this.gameManager.changeState(new Over(this.gameManager))
                     this.gameManager.gameCore.changeScene(
                         new OverScene(this.gameManager.gameCore.getCurrentScene().getGameObjects())

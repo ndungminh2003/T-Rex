@@ -93,6 +93,10 @@ export class Dinosaur extends Sprite {
         this.currentState = state
     }
 
+    public getCurrentState() : DinosaurState {
+        return this.currentState
+    }
+
     public resetPos(): void {
         this.width = this.image.width
         this.height = this.image.height

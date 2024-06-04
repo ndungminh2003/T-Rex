@@ -1,5 +1,4 @@
 import { canvas } from './../../game-engine/utilities/Config'
-// import { DinosaurManager } from '../object/player/DinosaurManager'
 import { Dinosaur } from '../object/player/Dinosaur'
 import { Ground } from '../object/map/Ground'
 import { Cloud } from '../object/map/Cloud'
@@ -32,8 +31,8 @@ export class GameScene extends Scene {
         this.ground1 = new Ground(new Vec2D(2400, 0))
         this.score = new Number(new Vec2D(canvas.width - 150, 50), 5)
         this.cloud = new Cloud(new Vec2D(canvas.width - 900, 100), new Vec2D(-0.8, 0))
-        this.cloud3 = new Cloud(new Vec2D(canvas.width - 200, 130), new Vec2D(-0.6, 0))
-        this.cloud1 = new Cloud(new Vec2D(canvas.width - 1200, 180), new Vec2D(-0.4, 0))
+        this.cloud3 = new Cloud(new Vec2D(canvas.width - 200, 130), new Vec2D(-0.9, 0))
+        this.cloud1 = new Cloud(new Vec2D(canvas.width - 1200, 180), new Vec2D(-0.6, 0))
         this.cloud2 = new Cloud(new Vec2D(canvas.width - 500, 220), new Vec2D(-0.3, 0))
         this.sun = new Sun(new Vec2D(canvas.width - 700, 80), new Vec2D(-3, 0))
         this.highScore = new HighScore(new Vec2D(canvas.width - 400, 50))

@@ -1,3 +1,4 @@
+import { GameObject } from '../../../game-engine/components/GameObject'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { Digit } from './Digit'
@@ -5,13 +6,13 @@ import { Digit } from './Digit'
 const WIDTH_OF_DIGIT = 25
 const HIGH_SCORE_KEY = 'highScore'
 
-export class Number extends Sprite {
+export class Number extends GameObject {
     private length: number
     private listDigit: Digit[]
     private num: number
     private formattedNumber: string
     private highScore: number
-    private incrementCounter: number // To slow down the score update
+    private incrementCounter: number
 
     constructor(pos: Vec2D, length: number = 5) {
         super()
@@ -19,7 +20,7 @@ export class Number extends Sprite {
         this.listDigit = []
         this.position = pos
         this.highScore = window.Number(localStorage.getItem(HIGH_SCORE_KEY)) || 0
-        this.incrementCounter = 0 // Initialize the counter
+        this.incrementCounter = 0
 
         for (let i = 0; i < length; i++) {
             this.listDigit.push(

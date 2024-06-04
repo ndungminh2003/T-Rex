@@ -1,3 +1,4 @@
+import { GameObject } from '../../../game-engine/components/GameObject'
 import { Sprite } from '../../../game-engine/sprite/Sprite'
 import { Vec2D } from '../../../game-engine/utilities/Vec2D'
 import { Character } from './Character'
@@ -5,7 +6,7 @@ import { Digit } from './Digit'
 
 const HIGH_SCORE_KEY = 'highScore'
 
-export class HighScore extends Sprite {
+export class HighScore extends GameObject {
     private hChar: Character
     private iChar: Character
     private highScore: number
@@ -15,12 +16,10 @@ export class HighScore extends Sprite {
         this.position = pos
         this.hChar = new Character(new Vec2D(this.position.getX(), this.position.getY()), 'H')
         this.iChar = new Character(new Vec2D(this.position.getX() + 22, this.position.getY()), 'I')
-        this.highScore = Number(localStorage.getItem(HIGH_SCORE_KEY)) || 0 
+        this.highScore = Number(localStorage.getItem(HIGH_SCORE_KEY)) || 0
     }
 
-    update(frameTimeDelta: number, gameSpeed: number) {
-        
-    }
+    update(frameTimeDelta: number, gameSpeed: number) {}
 
     render() {
         this.hChar.render()

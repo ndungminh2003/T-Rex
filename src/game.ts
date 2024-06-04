@@ -1,4 +1,4 @@
-import { gameManager } from './GameManager'
+import { gameManager } from './game/game-state/GameManager'
 
 function loop(lastTime: number): void {
     const curTime = Date.now()

@@ -1,5 +1,4 @@
 import { Dinosaur } from '../Dinosaur'
-import { Physic } from '../../../../game-engine/physics/Physic'
 
 export abstract class DinosaurState {
     protected dinosaur: Dinosaur

@@ -1,6 +1,5 @@
 import { InputManager } from '../input/InputManager'
 import { Scene } from '../scene/Scene'
-import { GAME_STATES } from '../utilities/Config'
 import { Canvas } from '../canvas/Canvas'
 import { ctx, canvas } from '../utilities/Config'
 import { ReadyScene } from '../../game/scenes/ReadyScene'
@@ -14,7 +13,6 @@ export class GameCore {
     public state: number
 
     constructor() {
-        this.state = GAME_STATES.READY
         this.setCurrentScene(new ReadyScene())
         this.canvas = Canvas.getInstance()
         this.inputManager = InputManager.getInstance()

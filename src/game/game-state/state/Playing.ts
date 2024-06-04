@@ -37,9 +37,8 @@ export class Playing extends State {
                 playerCollider.setPosition(player.getPos())
 
                 if (playerCollider.isCollidingWith(enemyCollider)) {
-                    this.gameManager.changeState(new Over(this.gameManager))
                     player.setImage(die_Image)
-                    // player.resetPos()
+                    this.gameManager.changeState(new Over(this.gameManager))
                     this.gameManager.gameCore.changeScene(
                         new OverScene(this.gameManager.gameCore.getCurrentScene().getGameObjects())
                     )

@@ -22,6 +22,12 @@ duckImage.src = './assets/images/crouch_1.png'
 const duck2Image = new Image()
 duck2Image.src = './assets/images/crouch_2.png'
 
+const dieImage = new Image()
+dieImage.src = './assets/images/die.png'
+
+const die1Image = new Image()
+die1Image.src = './assets/images/die_1.png'
+
 export class Dinosaur extends Sprite {
     protected physic: Physic
     protected animation: Animation
@@ -46,6 +52,9 @@ export class Dinosaur extends Sprite {
 
         this.animation.addAnimationFrame('CROUCH', duckImage)
         this.animation.addAnimationFrame('CROUCH', duck2Image)
+
+        this.animation.addAnimationFrame('DIE', dieImage)
+        this.animation.addAnimationFrame('DIE', die1Image)
 
         this.collider = new Collider(this)
     }
